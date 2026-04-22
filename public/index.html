@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCB - PhotoQuiz</title>
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <style>
+     
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de Inicio -->
+        <div id="startScreen" class="start-screen fade-in">
+            <div class="logo">📸 PhotoQuiz</div>
+            <div class="subtitle">¿Puedes adivinar de qué se trata la foto?</div>
+            
+            <div class="input-group">
+                <label for="playerName">Tu nombre</label>
+                <input type="text" id="playerName" placeholder="Ej: Juan Pérez" maxlength="20" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <label for="categorySelect">Categoría</label>
+                <select id="categorySelect">
+                    <option value="mixed">🎲 Mixto (Todas las categorías)</option>
+                    <option value="landmarks">🗺️ Monumentos Famosos</option>
+                    <option value="animals">🦁 Animales</option>
+                    <option value="movies">🎬 Personajes de Películas</option>
+                </select>
+            </div>
+            
+            <button class="btn" id="startBtn" onclick="startGame()">¡Comenzar Juego!</button>
+            
+            <div style="margin-top: 2rem; color: #999; font-size: 0.9rem;">
+                <p>💡 Tienes 15 segundos por pregunta</p>
+                <p>🏆 Los puntajes se guardan en MongoDB</p>
+                <p>🔒 Código fuente protegido</p>
+            </div>
+        </div>
+
+        <!-- Pantalla del Juego -->
+        <div id="gameScreen" class="game-screen">
+            <div class="game-header">
+                <div class="player-info" id="gamePlayerName">Jugador</div>
+                <div class="score-display">Puntos: <span id="currentScore">0</span></div>
+            </div>
+            
+            <div class="timer-bar">
+                <div class="timer-progress" id="timerBar"></div>
+            </div>
+            
+            <div class="question-counter">
+                Pregunta <span id="questionNumber">1</span> de <span id="totalQuestions">10</span>
+            </div>
+            
+            <div class="image-container">
+                <img id="questionImage" src="" alt="Adivina la imagen" draggable="false">
+            </div>
+            
+            <div class="options-grid" id="optionsContainer"></div>
+        </div>
+
+        <!-- Pantalla de Resultados -->
+        <div id="resultScreen" class="result-screen">
+            <div class="trophy">🏆</div>
+            <div class="final-score" id="finalScore">0</div>
+            <div class="score-message" id="scoreMessage">¡Buen intento!</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="correctAnswers">0</div>
+                    <div class="stat-label">Correctas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTime">0s</div>
+                    <div class="stat-label">Tiempo Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="accuracy">0%</div>
+                    <div class="stat-label">Precisión</div>
+                </div>
+            </div>
+            
+            <div id="dbStatus" class="db-status"></div>
+            
+            <div class="leaderboard">
+                <h3>🏅 Tabla de Clasificación</h3>
+                <div id="leaderboardList"></div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <button class="btn" onclick="restartGame()">Jugar de Nuevo</button>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/game.js"></script>
+</body>
+</html>

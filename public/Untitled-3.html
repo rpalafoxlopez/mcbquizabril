@@ -1,0 +1,476 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PhotoQuiz - Results</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#1e1e30",
+              "on-surface-variant": "#a098b0",
+              surface: "#0f0f1a",
+              "on-primary-container": "#ffe0ec",
+              primary: "#ff2d78",
+              "inverse-on-surface": "#0a0a12",
+              "on-secondary": "#001a1a",
+              "on-tertiary-container": "#fff0c0",
+              "on-tertiary-fixed": "#1a1000",
+              "on-error": "#1a0000",
+              "inverse-surface": "#e8e0f0",
+              "surface-container-highest": "#28283e",
+              "secondary-fixed-dim": "#00e6b8",
+              "surface-container": "#141422",
+              "primary-container": "#b3004e",
+              error: "#ff4444",
+              secondary: "#00ffcc",
+              "surface-tint": "#ff2d78",
+              "inverse-primary": "#8c0038",
+              "outline-variant": "#302840",
+              "surface-variant": "#1e1e30",
+              "on-primary": "#1a0010",
+              "surface-dim": "#0f0f1a",
+              "on-tertiary": "#1a1000",
+              "on-background": "#e8e0f0",
+              "primary-fixed": "#ffe0ec",
+              "on-primary-fixed": "#3d0020",
+              outline: "#5a5068",
+              "on-secondary-fixed": "#001a1a",
+              "on-secondary-container": "#c0fff4",
+              "on-tertiary-fixed-variant": "#665200",
+              "surface-container-lowest": "#0a0a12",
+              "secondary-container": "#004d3d",
+              "on-surface": "#e8e0f0",
+              "on-secondary-fixed-variant": "#004d4d",
+              "primary-fixed-dim": "#ff80aa",
+              "tertiary-fixed-dim": "#ffe04a",
+              background: "#0a0a12",
+              "surface-bright": "#1a1a2e",
+              "error-container": "#3d0f0f",
+              "tertiary-fixed": "#fff0c0",
+              "tertiary-container": "#665200",
+              "surface-container-low": "#111118",
+              tertiary: "#ffe04a",
+              "secondary-fixed": "#c0fff4",
+              "on-primary-fixed-variant": "#8c0038",
+              "on-error-container": "#ffa0a0",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            fontFamily: {
+              headline: ["Sora"],
+              display: ["Sora"],
+              body: ["Inter"],
+              label: ["Space Grotesk"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .neon-glow-pink {
+        text-shadow: 0 0 8px #ff2d78;
+      }
+      .neon-glow-cyan {
+        text-shadow: 0 0 8px #00ffcc;
+      }
+      .neon-border-pink {
+        border: 1px solid rgba(255, 45, 120, 0.4);
+        box-shadow:
+          inset 0 0 12px rgba(255, 45, 120, 0.1),
+          0 0 16px rgba(255, 45, 120, 0.1);
+      }
+      .neon-border-cyan {
+        border: 1px solid rgba(0, 255, 204, 0.3);
+        box-shadow:
+          inset 0 0 12px rgba(0, 255, 204, 0.05),
+          0 0 16px rgba(0, 255, 204, 0.05);
+      }
+      .scanline-overlay {
+        background:
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.06),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.06)
+          );
+        background-size:
+          100% 2px,
+          3px 100%;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background font-body text-on-surface selection:bg-primary selection:text-white overflow-x-hidden min-h-screen"
+  >
+    <div class="fixed inset-0 scanline-overlay z-[60]"></div>
+    <!-- TopAppBar -->
+    <nav
+      class="fixed top-0 z-50 w-full h-16 px-6 flex justify-between items-center bg-[#0a0a12]/90 backdrop-blur-xl border-b border-pink-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
+    >
+      <div
+        class="text-2xl font-bold tracking-tighter text-pink-500 drop-shadow-[0_0_8px_rgba(255,45,120,0.8)] font-headline"
+      >
+        PHOTOQUIZ
+      </div>
+      <div class="flex items-center gap-6">
+        <span
+          class="material-symbols-outlined text-slate-400 cursor-pointer transition-all duration-300 ease-in-out hover:text-cyan-400 hover:drop-shadow-[0_0_8px_rgba(0,255,204,0.6)] active:scale-95"
+          data-icon="notifications"
+          >notifications</span
+        >
+        <span
+          class="material-symbols-outlined text-slate-400 cursor-pointer transition-all duration-300 ease-in-out hover:text-cyan-400 hover:drop-shadow-[0_0_8px_rgba(0,255,204,0.6)] active:scale-95"
+          data-icon="settings"
+          >settings</span
+        >
+      </div>
+    </nav>
+    <main class="pt-24 pb-32 px-4 max-w-4xl mx-auto">
+      <!-- Celebration Header -->
+      <section class="text-center mb-12">
+        <div class="relative inline-block mb-6">
+          <div
+            class="absolute -inset-4 bg-primary/20 blur-3xl rounded-full"
+          ></div>
+          <span
+            class="material-symbols-outlined text-[120px] text-primary neon-glow-pink relative"
+            data-icon="emoji_events"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >emoji_events</span
+          >
+        </div>
+        <h1 class="font-headline font-extrabold text-4xl mb-2 tracking-tight">
+          QUIZ MASTER
+        </h1>
+        <p
+          class="font-label text-secondary text-sm uppercase tracking-widest neon-glow-cyan"
+        >
+          Level up achieved!
+        </p>
+        <div class="mt-8 flex flex-col items-center">
+          <div class="text-6xl font-headline font-bold text-on-surface">
+            2,450<span class="text-primary text-2xl ml-2 neon-glow-pink"
+              >PTS</span
+            >
+          </div>
+          <div
+            class="h-1 w-48 bg-surface-container-highest mt-4 rounded-full overflow-hidden"
+          >
+            <div
+              class="h-full w-[85%] bg-primary shadow-[0_0_12px_#ff2d78]"
+            ></div>
+          </div>
+          <p
+            class="font-label text-[10px] mt-2 text-on-surface-variant uppercase tracking-tighter"
+          >
+            85% to next rank
+          </p>
+        </div>
+      </section>
+      <!-- Stats Grid -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+        <div
+          class="surface-container p-6 rounded-xl neon-border-pink flex flex-col items-center justify-center text-center transition-all duration-300 hover:bg-surface-container-high group"
+        >
+          <span
+            class="material-symbols-outlined text-primary mb-3 group-hover:scale-110 transition-transform"
+            data-icon="check_circle"
+            >check_circle</span
+          >
+          <span
+            class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant"
+            >Correct</span
+          >
+          <span class="font-headline text-3xl font-bold mt-1">18/20</span>
+        </div>
+        <div
+          class="surface-container p-6 rounded-xl neon-border-cyan flex flex-col items-center justify-center text-center transition-all duration-300 hover:bg-surface-container-high group"
+        >
+          <span
+            class="material-symbols-outlined text-secondary mb-3 group-hover:scale-110 transition-transform"
+            data-icon="timer"
+            >timer</span
+          >
+          <span
+            class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant"
+            >Total Time</span
+          >
+          <span class="font-headline text-3xl font-bold mt-1">02:45</span>
+        </div>
+        <div
+          class="surface-container p-6 rounded-xl border border-tertiary/30 shadow-[inset_0_0_12px_rgba(255,224,74,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:bg-surface-container-high group"
+        >
+          <span
+            class="material-symbols-outlined text-tertiary mb-3 group-hover:scale-110 transition-transform"
+            data-icon="target"
+            >target</span
+          >
+          <span
+            class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant"
+            >Accuracy</span
+          >
+          <span class="font-headline text-3xl font-bold mt-1">90%</span>
+        </div>
+      </section>
+      <!-- Leaderboard List -->
+      <section class="mb-12">
+        <div class="flex items-center justify-between mb-6 px-2">
+          <h2 class="font-headline text-xl font-bold flex items-center gap-2">
+            <span
+              class="material-symbols-outlined text-secondary"
+              data-icon="leaderboard"
+              >leaderboard</span
+            >
+            Leaderboard
+          </h2>
+          <span
+            class="font-label text-xs text-on-surface-variant uppercase tracking-widest"
+            >Global Ranking</span
+          >
+        </div>
+        <div class="space-y-3">
+          <!-- User Rank -->
+          <div
+            class="surface-container-highest p-4 rounded-xl border border-primary/40 flex items-center justify-between shadow-[0_0_15px_rgba(255,45,120,0.15)] relative overflow-hidden"
+          >
+            <div class="absolute left-0 top-0 w-1 h-full bg-primary"></div>
+            <div class="flex items-center gap-4">
+              <div class="font-label text-lg font-bold text-primary w-8">
+                #42
+              </div>
+              <div class="relative h-10 w-10">
+                <img
+                  alt="User avatar"
+                  class="rounded-full border-2 border-primary object-cover h-full w-full"
+                  data-alt="portrait of a young man with futuristic neon lighting reflection on his skin, wearing cyber clothing"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4ZxBZ-EAQrG_QkZicconbIkJVsdXoZQsEQWV6PRDykXmpNyUeg7xfyBDKzQu7mpAezu-GwhoVYfBPvTixZHISpm1OdYX5Pt3tX7l_r0yKGKBsSCWuUi3xOtWhgxw0j-WTqxO_fDrkpjRe3HKKQgindEjoiowbERmg6z4qo7XCN8MoMPsuuwA_T6dOP5yNkmVcxmFodk8x0XoWyokc4hCzGwVyK1Wv-m4GoqSUbjZPxtwZqxvQK0YKTLSAyyy6vkmn-q7vLwcR_lg"
+                />
+                <div
+                  class="absolute -bottom-1 -right-1 bg-primary text-[8px] px-1 rounded-full text-white font-bold"
+                >
+                  YOU
+                </div>
+              </div>
+              <div>
+                <p class="font-headline font-bold text-sm">Neon_Soul</p>
+                <p class="font-label text-[10px] text-on-surface-variant">
+                  SHIBUYA DISTRICT
+                </p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-headline font-bold text-primary">2,450</p>
+              <p class="font-label text-[9px] text-on-surface-variant">PTS</p>
+            </div>
+          </div>
+          <!-- Top Ranked -->
+          <div
+            class="surface-container p-4 rounded-xl border border-white/5 flex items-center justify-between transition-all hover:border-secondary/30"
+          >
+            <div class="flex items-center gap-4">
+              <div class="font-label text-lg font-bold text-tertiary w-8">
+                #1
+              </div>
+              <img
+                alt="Rank 1 avatar"
+                class="rounded-full border-2 border-tertiary object-cover h-10 w-10"
+                data-alt="Close up portrait of a futuristic woman with neon pink hair and holographic glasses, moody cyberpunk lighting"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2cbJMXVHonZcGXQ2vdMVc0lNZjIzR7fOSzdiDwPSIMBiji1TYjoyBH_BloqcQvcKh_n17n5tFf64c8lxRikbrSyZ1zSb5wm6W8IiJbeWja8VnHsvOb7nYbpexJyT1mvH4hUM1n0MCiH9uztK0neTl8x2QOE34esoYYq2QnlBw1iu6DZcovhhGevmphi0KVzWgljJvzNrDiDXujIHoKCvKBr9M8aDZrjzSo-yJfJzHWHr-oyZYjBpOID6-Be_dED10BTdEC5Vo_P4"
+              />
+              <div>
+                <p class="font-headline font-bold text-sm">Cyber_Queen</p>
+                <p class="font-label text-[10px] text-on-surface-variant">
+                  GINZA CORE
+                </p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-headline font-bold text-tertiary">3,890</p>
+              <p class="font-label text-[9px] text-on-surface-variant">PTS</p>
+            </div>
+          </div>
+          <div
+            class="surface-container p-4 rounded-xl border border-white/5 flex items-center justify-between transition-all hover:border-secondary/30"
+          >
+            <div class="flex items-center gap-4">
+              <div class="font-label text-lg font-bold text-slate-400 w-8">
+                #2
+              </div>
+              <img
+                alt="Rank 2 avatar"
+                class="rounded-full border-2 border-slate-400 object-cover h-10 w-10"
+                data-alt="Portrait of a young asian man in techwear hoodie, dark urban background with blurred neon signs"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6Xgu4vkD2YK7GM1DUU12NuM-BVVOiUlto9FeUi2QAEMovG_oFWGvu0KGLQDeKN-lwhEBboowBIgmcOGN4lLs3NOQU7ED1H6Rr_MxXnb7Ejv79o5M6lxc3RZZNgl6ud5bdlduurnr28l-uLF5jOki8191dJtgPRcpt5-NRPG4QFRTuA-o8XRB9-qJ7F4nf_cUR8d2f1AjRX3qX5f9g61yD6NwalHFtJ082_LRVFo5mXmhfw7c_m4lorrVm7rxv13jfH3HfoRGXa4E"
+              />
+              <div>
+                <p class="font-headline font-bold text-sm">Data_Runner</p>
+                <p class="font-label text-[10px] text-on-surface-variant">
+                  ROPPONGI HILLS
+                </p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-headline font-bold text-on-surface">3,420</p>
+              <p class="font-label text-[9px] text-on-surface-variant">PTS</p>
+            </div>
+          </div>
+          <div
+            class="surface-container p-4 rounded-xl border border-white/5 flex items-center justify-between transition-all hover:border-secondary/30 opacity-80"
+          >
+            <div class="flex items-center gap-4">
+              <div class="font-label text-lg font-bold text-slate-500 w-8">
+                #3
+              </div>
+              <img
+                alt="Rank 3 avatar"
+                class="rounded-full border-2 border-slate-500 object-cover h-10 w-10"
+                data-alt="Vibrant portrait of a woman with neon green lighting accentuating her face, sleek futuristic aesthetic"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBe-VdKRji2pPT3NJTA3FtUWOiTPOssvbFRv6u-F0iewMrfPS7Gk-iPRhJMxo5Tr15vFFv-orKE6wC6Q3zCzREF8oEVHy1Oi1_AySPHzPxyucjvnQmUhn6hnJlvHl5PZP1zCtGjJfP5i1Z2J3HKrKuWCxO_nccJJNYvhd9mwfeP4uipj8xrWOzCNYDy7PkK0bcU55X_TKbdDdLnrzQPwzMUJenYsCm69N_jgVlePyueEgqf5hbquo1nLEKkSkE8_R7PFGIJOq_0cQ8"
+              />
+              <div>
+                <p class="font-headline font-bold text-sm">Neon_Ghost</p>
+                <p class="font-label text-[10px] text-on-surface-variant">
+                  AKIHABARA
+                </p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-headline font-bold text-on-surface">3,110</p>
+              <p class="font-label text-[9px] text-on-surface-variant">PTS</p>
+            </div>
+          </div>
+        </div>
+        <button
+          class="w-full mt-8 py-4 px-6 bg-surface-container border border-secondary/40 rounded-xl font-label text-secondary uppercase tracking-[0.2em] font-bold transition-all duration-300 hover:bg-secondary/10 hover:shadow-[0_0_20px_rgba(0,255,204,0.2)] active:scale-[0.98]"
+        >
+          View Global Rank List
+        </button>
+      </section>
+      <!-- Action Cards -->
+      <section class="grid grid-cols-2 gap-4">
+        <div
+          class="relative group cursor-pointer overflow-hidden rounded-xl h-32 flex items-end p-4 border border-white/10 hover:border-primary/50 transition-all"
+        >
+          <div
+            class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+            data-alt="Retro computer and synthwave aesthetic with vibrant neon lighting and 80s technology vibe"
+            style="
+              background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuCnbuy-subEQut5zAeUg5oRXaCp52ALgLCAswq0Wkebme494Abe_D5cCybciLRaROrL6guh9_Myhe6UTy0DlltTuKPN-zpwaBLcBk3ywXj7rG8qYzNxAuIDNeAXRFq2Dcd9MzIu8xHX-iDbqkNEZ2EJ4JMrMWn_uKRUxktoeRyUQ_ARaUStke_zP4MYg7KskTWgyga63cIg-Io56kISsbjyBr9n4TKNENL4FHI6uvHXRjtoPYAE535EfHYC1Yctw9ElJmfM5XxXGPQ&quot;);
+            "
+          ></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10"
+          ></div>
+          <div class="relative z-20">
+            <p
+              class="font-label text-[10px] text-primary uppercase tracking-widest font-bold"
+            >
+              New Mission
+            </p>
+            <h3 class="font-headline text-white font-bold leading-tight">
+              Daily Challenge
+            </h3>
+          </div>
+        </div>
+        <div
+          class="relative group cursor-pointer overflow-hidden rounded-xl h-32 flex items-end p-4 border border-white/10 hover:border-secondary/50 transition-all"
+        >
+          <div
+            class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+            data-alt="Abstract colorful light streaks and motion blur, neon cyan and violet color palette, high energy"
+            style="
+              background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuAK-7b1LR4eYiIF5atRc0e1HQEtCBMxmCd_ZacOwgUfNvG7DYifiW8DNl6HkCFkDySHhix7loWkFgX6m2MDxu6iQ363o2aO1W2ECObo-z11-ZpdJ9JfAlHjWRMAIuVQ-DywuCjRyg-1QBfUuW-vLLPPRk836Y-CKZ_KXq89X5LdJw9LqP4lsRycqzi2Pi0vghP0aHwIPXF_SMT4AoruDt4TPYPFs33FiVuintprtsUL7PdE16dHTUcsM_WStCs5jBbEFKrXGHzcdq8&quot;);
+            "
+          ></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10"
+          ></div>
+          <div class="relative z-20">
+            <p
+              class="font-label text-[10px] text-secondary uppercase tracking-widest font-bold"
+            >
+              Unlock
+            </p>
+            <h3 class="font-headline text-white font-bold leading-tight">
+              Reward Vault
+            </h3>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- BottomNavBar -->
+    <nav
+      class="fixed bottom-0 w-full z-50 pb-safe bg-[#0a0a12] border-t border-cyan-500/20 shadow-[0_-4px_24px_rgba(0,255,204,0.15)] md:hidden"
+    >
+      <div class="flex justify-around items-center w-full h-20 px-4">
+        <div
+          class="flex flex-col items-center justify-center text-slate-500 opacity-60 transition-transform duration-200 cubic-bezier(0.34,1.56,0.64,1) hover:text-cyan-300 hover:opacity-100"
+        >
+          <span class="material-symbols-outlined" data-icon="videogame_asset"
+            >videogame_asset</span
+          >
+          <span
+            class="text-[10px] font-bold uppercase tracking-widest font-label mt-1"
+            >Play</span
+          >
+        </div>
+        <div
+          class="flex flex-col items-center justify-center text-pink-500 drop-shadow-[0_0_10px_rgba(255,45,120,0.7)] scale-110 transition-transform duration-200 cubic-bezier(0.34,1.56,0.64,1) hover:text-cyan-300 hover:opacity-100"
+        >
+          <span
+            class="material-symbols-outlined"
+            data-icon="leaderboard"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >leaderboard</span
+          >
+          <span
+            class="text-[10px] font-bold uppercase tracking-widest font-label mt-1"
+            >Rankings</span
+          >
+        </div>
+        <div
+          class="flex flex-col items-center justify-center text-slate-500 opacity-60 transition-transform duration-200 cubic-bezier(0.34,1.56,0.64,1) hover:text-cyan-300 hover:opacity-100"
+        >
+          <span class="material-symbols-outlined" data-icon="person"
+            >person</span
+          >
+          <span
+            class="text-[10px] font-bold uppercase tracking-widest font-label mt-1"
+            >Profile</span
+          >
+        </div>
+      </div>
+    </nav>
+  </body>
+</html>

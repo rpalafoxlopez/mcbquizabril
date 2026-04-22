@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCB - PhotoQuiz</title>
+    <title>MCB QUIZ - PhotoQuiz</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -41,110 +43,927 @@
             },
         };
     </script>
-    <link href="assets/css/style.css" rel="stylesheet" />
     
+    <style>
+        /* ===== BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a12;
+            color: #e8e0f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Scanline overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.3;
+        }
+
+        /* Grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 45, 120, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 45, 120, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ===== GLASS PANEL ===== */
+        .glass-panel {
+            background: rgba(20, 20, 34, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ===== MCB GLOWS ===== */
+        .MCB-glow-pink {
+            text-shadow: 0 0 8px #ff2d78, 0 0 20px rgba(255, 45, 120, 0.3);
+        }
+
+        .MCB-glow-cyan {
+            text-shadow: 0 0 8px #00ffcc, 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+
+        .MCB-glow-yellow {
+            text-shadow: 0 0 8px #ffe04a, 0 0 20px rgba(255, 224, 74, 0.3);
+        }
+
+        /* ===== SCREENS ===== */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 80px 1rem 2rem;
+            /* CENTRADO - NUEVO */
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* ===== START SCREEN ===== */
+        .start-screen {
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Sora', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #ff2d78;
+            text-shadow: 0 0 20px rgba(255, 45, 120, 0.5);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.05em;
+        }
+
+        .logo-icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #a098b0;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        /* Countdown timer */
+        .countdown-box {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .countdown-box.active {
+            background: rgba(0, 255, 204, 0.1);
+            border-color: #00ffcc;
+        }
+
+        .countdown-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #ff4444;
+            margin-bottom: 0.5rem;
+        }
+
+        .countdown-box.active .countdown-label {
+            color: #00ffcc;
+        }
+
+        .countdown-time {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #e8e0f0;
+        }
+
+        /* Already played message */
+        .played-box {
+            background: rgba(255, 224, 74, 0.1);
+            border: 1px solid #ffe04a;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .played-box h3 {
+            font-family: 'Sora', sans-serif;
+            color: #ffe04a;
+            margin-bottom: 0.5rem;
+        }
+
+        .played-box p {
+            color: #a098b0;
+            font-size: 0.9rem;
+        }
+
+        /* ===== INPUTS ===== */
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #00ffcc;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(10, 10, 18, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            color: #e8e0f0;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #ff2d78;
+            box-shadow: 0 0 15px rgba(255, 45, 120, 0.2);
+        }
+
+        .input-group input::placeholder {
+            color: #5a5068;
+        }
+
+        /* Category buttons */
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(30, 30, 48, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            color: #a098b0;
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            border-color: rgba(0, 255, 204, 0.3);
+            color: #00ffcc;
+        }
+
+        .category-btn.selected {
+            background: rgba(255, 45, 120, 0.15);
+            border-color: #ff2d78;
+            color: #ff2d78;
+            box-shadow: 0 0 15px rgba(255, 45, 120, 0.15);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: #ff2d78;
+            color: #1a0010;
+            border: none;
+            border-radius: 0.75rem;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 30px rgba(255, 45, 120, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled::before {
+            display: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 204, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        /* ===== GAME SCREEN ===== */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(20, 20, 34, 0.6);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .player-info {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            color: #00ffcc;
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
+        }
+
+        .score-display {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #ff2d78;
+        }
+
+        /* Timer */
+        .timer-container {
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .timer-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .timer-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff2d78, #00ffcc);
+            box-shadow: 0 0 10px rgba(255, 45, 120, 0.5);
+            transition: width 0.1s linear;
+            border-radius: 3px;
+        }
+
+        .timer-bar.warning {
+            background: linear-gradient(90deg, #ff4444, #ff2d78);
+        }
+
+        .timer-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.25rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #a098b0;
+        }
+
+        /* Question counter */
+        .question-counter {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.875rem;
+            color: #a098b0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .question-counter span {
+            color: #ffe04a;
+            font-weight: 700;
+        }
+
+        /* Image */
+        .image-container {
+            width: 100%;
+            max-width: 600px;
+            height: 320px;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 18, 0.6), transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .option-btn {
+            padding: 1.25rem 1rem;
+            background: rgba(30, 30, 48, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            color: #e8e0f0;
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: rgba(255, 45, 120, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 45, 120, 0.1);
+        }
+
+        .option-btn .option-label {
+            display: block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.25rem;
+            opacity: 0.6;
+        }
+
+        .option-btn.correct {
+            background: rgba(0, 255, 204, 0.15);
+            border-color: #00ffcc;
+            color: #00ffcc;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            animation: correctPulse 0.5s;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(255, 68, 68, 0.15);
+            border-color: #ff4444;
+            color: #ff4444;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.2);
+            animation: shake 0.5s;
+        }
+
+        .option-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ===== RESULTS SCREEN ===== */
+        .results-container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .trophy {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px rgba(255, 224, 74, 0.4));
+        }
+
+        .final-score {
+            font-family: 'Sora', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #ff2d78;
+            text-shadow: 0 0 20px rgba(255, 45, 120, 0.4);
+            line-height: 1;
+        }
+
+        .score-message {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.25rem;
+            color: #00ffcc;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+            margin: 1rem 0 2rem;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(20, 20, 34, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(255, 45, 120, 0.2);
+        }
+
+        .stat-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #ff2d78;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #a098b0;
+            margin-top: 0.5rem;
+        }
+
+        /* DB Status */
+        .db-status {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .db-status.success {
+            display: block;
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+        }
+
+        .db-status.error {
+            display: block;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+        }
+
+        .db-status.loading {
+            display: block;
+            background: rgba(255, 224, 74, 0.1);
+            border: 1px solid #ffe04a;
+            color: #ffe04a;
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .leaderboard h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #e8e0f0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(20, 20, 34, 0.6);
+            border-radius: 0.75rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(30, 30, 48, 0.8);
+        }
+
+        .leaderboard-item.current-player {
+            border-left-color: #ff2d78;
+            background: linear-gradient(90deg, rgba(255, 45, 120, 0.1), transparent);
+        }
+
+        .leaderboard-rank {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            width: 2.5rem;
+            color: #ffe04a;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .leaderboard-date {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            color: #a098b0;
+        }
+
+        .leaderboard-score {
+            text-align: right;
+        }
+
+        .leaderboard-score-value {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            color: #ff2d78;
+        }
+
+        .leaderboard-score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            color: #a098b0;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .logo { font-size: 2.5rem; }
+            .options-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .image-container { height: 250px; }
+            .category-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a12; }
+        ::-webkit-scrollbar-thumb { background: #302840; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff2d78; }
+
+        /* ===== SELECTION ===== */
+        ::selection {
+            background: #ff2d78;
+            color: #1a0010;
+        }
+
+        /* Glow effects background */
+        .glow-bg {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .glow-pink {
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 45, 120, 0.08);
+            top: -100px;
+            left: -100px;
+        }
+
+        .glow-cyan {
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 255, 204, 0.06);
+            bottom: -50px;
+            right: -50px;
+        }
+    </style>
 </head>
 <body>
-   <body class="bg-background font-body text-on-surface selection:bg-primary selection:text-white overflow-x-hidden min-h-screen">
-    <div class="fixed inset-0 scanline-overlay z-[60] pointer-events-none"></div>
+    <!-- Background glows -->
+    <div class="glow-bg glow-pink"></div>
+    <div class="glow-bg glow-cyan"></div>
 
-    <!-- Top Navigation -->
-    <nav class="fixed top-0 z-50 w-full h-16 px-6 flex justify-between items-center bg-[#0a0a12]/90 backdrop-blur-xl border-b border-pink-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
-        <div class="text-2xl font-bold tracking-tighter text-pink-500 drop-shadow-[0_0_8px_rgba(255,45,120,0.8)] font-headline">
-            MCB QUIZ
-        </div>
-        <div class="flex items-center gap-6">
-            <span class="material-symbols-outlined text-slate-400 cursor-pointer transition-all duration-300 ease-in-out hover:text-cyan-400 hover:drop-shadow-[0_0_8px_rgba(0,255,204,0.6)] active:scale-95">settings</span>
-        </div>
-    </nav>
-
-    <main class="pt-24 pb-32 px-4 max-w-4xl mx-auto">
-        <!-- Celebration Header -->
-        <section class="text-center mb-12">
-            <div class="relative inline-block mb-6">
-                <div class="absolute -inset-4 bg-primary/20 blur-3xl rounded-full"></div>
-                <span class="material-symbols-outlined text-[120px] text-primary neon-glow-pink relative" style="font-variation-settings: 'FILL' 1">emoji_events</span>
-            </div>
-            <h1 class="font-headline font-extrabold text-4xl mb-2 tracking-tight" id="resultTitle">¿ADIVINA QUIÉN?</h1>
-            <p class="font-label text-secondary text-sm uppercase tracking-widest neon-glow-cyan" id="resultMessage">Level up achieved!</p>
-            
-            <div class="mt-8 flex flex-col items-center">
-                <div class="text-6xl font-headline font-bold text-on-surface">
-                    <span id="finalScore">0</span><span class="text-primary text-2xl ml-2 neon-glow-pink">PTS</span>
+    <!-- ===== START SCREEN ===== -->
+    <div id="startScreen" class="screen active fade-in">
+        <div class="w-full max-w-md">
+            <div class="glass-panel rounded-2xl p-8 relative overflow-hidden">
+                <!-- Top accent line -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                
+                <div class="text-center mb-8">
+                    <span class="logo-icon">⚡</span>
+                    <div class="logo">MCB QUIZ</div>
+                    <p class="subtitle">El reto visual definitivo</p>
                 </div>
-                <div class="h-1 w-48 bg-surface-container-highest mt-4 rounded-full overflow-hidden">
-                    <div class="h-full bg-primary shadow-[0_0_12px_#ff2d78]" id="scoreBar" style="width: 0%"></div>
+
+                <!-- Countdown Timer -->
+                <div id="countdownBox" class="countdown-box">
+                    <div class="countdown-label">⏰ Tiempo restante para participar</div>
+                    <div class="countdown-time" id="countdownTime">Calculando...</div>
                 </div>
-                <p class="font-label text-[10px] mt-2 text-on-surface-variant uppercase tracking-tighter" id="scorePercent">0% accuracy</p>
-            </div>
-        </section>
 
-        <!-- Stats Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-            <div class="surface-container p-6 rounded-xl neon-border-pink flex flex-col items-center justify-center text-center transition-all duration-300 hover:bg-surface-container-high group">
-                <span class="material-symbols-outlined text-primary mb-3 group-hover:scale-110 transition-transform">check_circle</span>
-                <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Correct</span>
-                <span class="font-headline text-3xl font-bold mt-1" id="correctAnswers">0/0</span>
-            </div>
-            <div class="surface-container p-6 rounded-xl neon-border-cyan flex flex-col items-center justify-center text-center transition-all duration-300 hover:bg-surface-container-high group">
-                <span class="material-symbols-outlined text-secondary mb-3 group-hover:scale-110 transition-transform">timer</span>
-                <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Total Time</span>
-                <span class="font-headline text-3xl font-bold mt-1" id="totalTime">0s</span>
-            </div>
-            <div class="surface-container p-6 rounded-xl border border-tertiary/30 shadow-[inset_0_0_12px_rgba(255,224,74,0.05)] flex flex-col items-center justify-center text-center transition-all duration-300 hover:bg-surface-container-high group">
-                <span class="material-symbols-outlined text-tertiary mb-3 group-hover:scale-110 transition-transform">target</span>
-                <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Accuracy</span>
-                <span class="font-headline text-3xl font-bold mt-1" id="accuracy">0%</span>
-            </div>
-        </section>
+                <!-- Already Played Message (hidden by default) -->
+                <div id="playedBox" class="played-box" style="display: none;">
+                    <h3>🎮 Ya participaste</h3>
+                    <p>Ya has jugado una vez. Solo se permite una participación por persona.</p>
+                    <p id="playedScore" style="margin-top: 0.5rem; color: #ff2d78; font-weight: bold;"></p>
+                </div>
 
-        <!-- DB Status -->
-        <div id="dbStatus" class="hidden mb-8 p-4 rounded-xl text-center font-label text-sm"></div>
+                <div id="gameForm">
+                    <div class="input-group">
+                        <label for="playerName">Tu Nombre</label>
+                        <input type="text" id="playerName" placeholder="Ej: Juan Pérez" maxlength="20" autocomplete="off">
+                    </div>
 
-        <!-- Leaderboard -->
-        <section class="mb-12">
-            <div class="flex items-center justify-between mb-6 px-2">
-                <h2 class="font-headline text-xl font-bold flex items-center gap-2">
-                    <span class="material-symbols-outlined text-secondary">leaderboard</span>
-                    Leaderboard
-                </h2>
-                <span class="font-label text-xs text-on-surface-variant uppercase tracking-widest">Resultados</span>
-            </div>
-            <div class="space-y-3" id="leaderboardList">
-                <!-- Generated by JS -->
-            </div>
-        </section>
+                    <div class="input-group">
+                        <label for="mcbID">Id de MCB</label>
+                        <input type="text" id="mcbID" placeholder="Ej: 12345" maxlength="5" autocomplete="off">
+                    </div>
 
-        <!-- Actions -->
-        <section class="grid grid-cols-2 gap-4">
-            <a href="/" class="relative group cursor-pointer overflow-hidden rounded-xl h-24 flex items-center justify-center border border-primary/40 hover:bg-primary/10 transition-all">
-                <span class="font-headline font-bold text-primary flex items-center gap-2">
-                    <span class="material-symbols-outlined">replay</span>
-                    Jugar de Nuevo
-                </span>
-            </a>
-            <a href="/" class="relative group cursor-pointer overflow-hidden rounded-xl h-24 flex items-center justify-center border border-secondary/40 hover:bg-secondary/10 transition-all">
-                <span class="font-headline font-bold text-secondary flex items-center gap-2">
+                    <div class="input-group">
+                        <label>Departamento</label>
+                        <div class="category-grid">
+                            <button type="button" class="category-btn selected" data-category="produccion" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">auto_awesome</span>
+                                Producción
+                            </button>
+                            <button type="button" class="category-btn" data-category="sac" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">location_on</span>
+                                SAC
+                            </button>
+                            <button type="button" class="category-btn" data-category="talentoycultura" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">pets</span>
+                                Talento y Cultura
+                            </button>
+                            <button type="button" class="category-btn" data-category="direccion_general" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">movie</span>
+                                Dirección General
+                            </button>
+                            <button type="button" class="category-btn" data-category="siniestros" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">movie</span>
+                               Siniestros
+                            </button>
+                             <button type="button" class="category-btn selected" data-category="finanzas" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">auto_awesome</span>
+                                Finanzas
+                            </button>
+                            <button type="button" class="category-btn" data-category="marketing" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">location_on</span>
+                                Marketing
+                            </button>
+                            <button type="button" class="category-btn" data-category="patrimonial" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">pets</span>
+                                Patrimonial
+                            </button>
+                            <button type="button" class="category-btn" data-category="nuevosnegocios" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">movie</span>
+                                Nuevos Negocios
+                            </button>
+                            <button type="button" class="category-btn" data-category="telemarketing" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">movie</span>
+                               Telemarketing
+                            </button>
+                                <button type="button" class="category-btn" data-category="desarrollodigital" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">movie</span>
+                               Desarrollo Digital
+                            </button>                            
+                        </div>
+                        <input type="hidden" id="categorySelect" value="mixed">
+                    </div>
+
+                    <button class="btn" id="startBtn" onclick="startGame()">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                        Iniciar Partida
+                    </button>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">💡 15 segundos por pregunta</p>
+                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">🏆 Rankings globales en MongoDB</p>
+                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">🎯 Solo una participación por persona</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GAME SCREEN ===== -->
+    <div id="gameScreen" class="screen">
+        <div class="game-header">
+            <div class="player-info" id="gamePlayerName">PLAYER</div>
+            <div class="score-display">
+                <span class="material-symbols-outlined text-sm">stars</span>
+                <span id="currentScore">0</span>
+            </div>
+        </div>
+
+        <div class="timer-container">
+            <div class="timer-bar-bg">
+                <div class="timer-bar" id="timerBar" style="width: 100%"></div>
+            </div>
+            <div class="timer-text">
+                <span>Tiempo restante</span>
+                <span id="timerText" class="text-secondary">15.0s</span>
+            </div>
+        </div>
+
+        <div class="question-counter">
+            Pregunta <span id="questionNumber">1</span> de <span id="totalQuestions">10</span>
+        </div>
+
+        <div class="image-container">
+            <img id="questionImage" src="" alt="Adivina la imagen" draggable="false">
+        </div>
+
+        <div class="options-grid" id="optionsContainer"></div>
+    </div>
+
+    <!-- ===== RESULTS SCREEN ===== -->
+    <div id="resultScreen" class="screen">
+        <div class="results-container">
+            <div class="trophy">🏆</div>
+            <div class="final-score" id="finalScore">0</div>
+            <div class="score-message" id="scoreMessage">¡Buen intento!</div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="correctAnswers">0</div>
+                    <div class="stat-label">Correctas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value text-secondary" id="totalTime">0s</div>
+                    <div class="stat-label">Tiempo Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value text-tertiary" id="accuracy">0%</div>
+                    <div class="stat-label">Precisión</div>
+                </div>
+            </div>
+
+            <div id="dbStatus" class="db-status"></div>
+
+            <div class="leaderboard">
+                <h3>🏅 Tabla de Clasificación</h3>
+                <div id="leaderboardList"></div>
+            </div>
+
+            <div class="flex gap-3">
+                <button class="btn btn-secondary" onclick="goHome()">
                     <span class="material-symbols-outlined">home</span>
                     Inicio
-                </span>
-            </a>
-        </section>
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#0a0a12] border-t border-cyan-500/20 shadow-[0_-4px_24px_rgba(0,255,204,0.15)] md:hidden">
-        <div class="flex justify-around items-center w-full h-20 px-4">
-            <a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-cyan-300 transition-all" href="/">
-                <span class="material-symbols-outlined">videogame_asset</span>
-                <span class="text-[10px] font-bold uppercase tracking-widest font-label mt-1">Jugar</span>
-            </a>
-            <a class="flex flex-col items-center justify-center text-pink-500 drop-shadow-[0_0_10px_rgba(255,45,120,0.7)] scale-110 transition-all" href="/results.html">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">leaderboard</span>
-                <span class="text-[10px] font-bold uppercase tracking-widest font-label mt-1">Resultados</span>
-            </a>
+                </button>
+            </div>
         </div>
-    </nav>
+    </div>
+
+    <!-- ===== EXPIRED SCREEN ===== -->
+    <div id="expiredScreen" class="screen" style="display: none;">
+        <div class="w-full max-w-md text-center">
+            <div class="glass-panel rounded-2xl p-8">
+                <span class="material-symbols-outlined text-6xl text-error mb-4">timer_off</span>
+                <h2 class="font-headline font-black text-3xl text-error mb-4">JUEGO FINALIZADO</h2>
+                <p class="text-on-surface-variant mb-6">El periodo de participación ha terminado.</p>
+                <p class="text-on-surface-variant text-sm">Gracias a todos por participar. ¡Los ganadores serán anunciados pronto!</p>
+                <div class="mt-6">
+                    <button class="btn btn-secondary" onclick="viewLeaderboardOnly()">
+                        <span class="material-symbols-outlined">leaderboard</span>
+                        Ver Rankings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/assets/js/game.js"></script>
 </body>

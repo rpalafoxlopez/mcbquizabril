@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCB QUIZ - Ranking de Ganadores</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#00f3ff",
+                        secondary: "#07f3c3",
+                        tertiary: "#00ff00",
+                        background: "#0a0a12",
+                        surface: "#0f0f1a",
+                        "surface-container": "#141422",
+                        "surface-container-high": "#1e1e30",
+                        "surface-container-highest": "#28283e",
+                        "on-surface": "#e8e0f0",
+                        "on-surface-variant": "#a098b0",
+                        outline: "#5a5068",
+                        "outline-variant": "#302840",
+                        error: "#ff4444",
+                        "error-container": "#3d0f0f",
+                    },
+                    fontFamily: {
+                        headline: ["Sora", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                        label: ["Space Grotesk", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        /* ===== BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a12;
+            color: #e8e0f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Scanline overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.3;
+        }
+
+        /* Grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 45, 120, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 45, 120, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ===== GLASS PANEL ===== */
+        .glass-panel {
+            background: rgba(20, 20, 34, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ===== GLOWS ===== */
+        .glow-pink {
+            text-shadow: 0 0 8px #00f3ff, 0 0 20px rgba(255, 45, 120, 0.3);
+        }
+
+        .glow-cyan {
+            text-shadow: 0 0 8px #07f3c3, 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+
+        .glow-gold {
+            text-shadow: 0 0 8px #00ff00, 0 0 20px rgba(255, 224, 74, 0.3);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1.25rem 2rem;
+            background: #00f3ff;
+            color: #1a0010;
+            border: none;
+            border-radius: 0.75rem;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 30px rgba(255, 45, 120, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #07f3c3;
+            color: #07f3c3;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 204, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        /* ===== PODIUM ===== */
+        .podium {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            height: 280px;
+        }
+
+        .podium-place {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .podium-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            border: 3px solid;
+            background: rgba(20, 20, 34, 0.9);
+        }
+
+        .podium-avatar.gold {
+            border-color: #00ff00;
+            box-shadow: 0 0 30px rgba(255, 224, 74, 0.4);
+            color: #00ff00;
+            width: 100px;
+            height: 100px;
+            font-size: 2.5rem;
+        }
+
+        .podium-avatar.silver {
+            border-color: #a098b0;
+            box-shadow: 0 0 20px rgba(160, 152, 176, 0.3);
+            color: #a098b0;
+        }
+
+        .podium-avatar.bronze {
+            border-color: #ff8c42;
+            box-shadow: 0 0 20px rgba(255, 140, 66, 0.3);
+            color: #ff8c42;
+        }
+
+        .podium-block {
+            width: 120px;
+            border-radius: 0.75rem 0.75rem 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1rem;
+            position: relative;
+        }
+
+        .podium-block.gold {
+            height: 160px;
+            background: linear-gradient(180deg, rgba(255, 224, 74, 0.2), rgba(255, 224, 74, 0.05));
+            border: 1px solid rgba(255, 224, 74, 0.3);
+            border-bottom: none;
+            width: 140px;
+        }
+
+        .podium-block.silver {
+            height: 120px;
+            background: linear-gradient(180deg, rgba(160, 152, 176, 0.2), rgba(160, 152, 176, 0.05));
+            border: 1px solid rgba(160, 152, 176, 0.3);
+            border-bottom: none;
+        }
+
+        .podium-block.bronze {
+            height: 90px;
+            background: linear-gradient(180deg, rgba(255, 140, 66, 0.2), rgba(255, 140, 66, 0.05));
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            border-bottom: none;
+        }
+
+        .podium-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-align: center;
+            margin-bottom: 0.25rem;
+            color: #e8e0f0;
+        }
+
+        .podium-score {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #a098b0;
+        }
+
+        .podium-rank {
+            position: absolute;
+            top: -15px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+        }
+
+        .podium-rank.gold { color: #00ff00; }
+        .podium-rank.silver { color: #a098b0; }
+        .podium-rank.bronze { color: #ff8c42; }
+
+        /* ===== WINNERS LIST ===== */
+        .winners-list {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .winner-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: rgba(20, 20, 34, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .winner-item:hover {
+            background: rgba(30, 30, 48, 0.8);
+            border-color: rgba(255, 45, 120, 0.2);
+            transform: translateX(4px);
+        }
+
+        .winner-rank {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            width: 2.5rem;
+            text-align: center;
+            color: #00ff00;
+        }
+
+        .winner-rank.top {
+            color: #00f3ff;
+        }
+
+        .winner-info {
+            flex: 1;
+        }
+
+        .winner-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #e8e0f0;
+        }
+
+        .winner-meta {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            color: #a098b0;
+            margin-top: 0.25rem;
+        }
+
+        .winner-score {
+            text-align: right;
+        }
+
+        .winner-score-value {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #00f3ff;
+        }
+
+        .winner-score-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            color: #a098b0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ===== PRIZES ===== */
+        .prizes-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(20, 20, 34, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+        }
+
+        .prizes-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(255, 224, 74, 0.3);
+        }
+
+        .prize-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.75rem;
+            background: rgba(30, 30, 48, 0.4);
+        }
+
+        .prize-icon {
+            font-size: 2rem;
+        }
+
+        .prize-details {
+            flex: 1;
+        }
+
+        .prize-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #e8e0f0;
+        }
+
+        .prize-desc {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: #a098b0;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .podium { height: 240px; }
+            .podium-block { width: 100px; }
+            .podium-block.gold { width: 120px; }
+            .podium-avatar { width: 60px; height: 60px; font-size: 1.5rem; }
+            .podium-avatar.gold { width: 80px; height: 80px; font-size: 2rem; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a12; }
+        ::-webkit-scrollbar-thumb { background: #302840; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f3ff; }
+
+        /* ===== SELECTION ===== */
+        ::selection {
+            background: #00f3ff;
+            color: #1a0010;
+        }
+
+        /* Glow effects background */
+        .glow-bg {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .glow-pink {
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 45, 120, 0.08);
+            top: -100px;
+            left: -100px;
+        }
+
+        .glow-cyan {
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 255, 204, 0.06);
+            bottom: -50px;
+            right: -50px;
+        }
+
+        /* Confetti particles */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 9998;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <!-- Background glows -->
+    <div class="glow-bg glow-pink"></div>
+    <div class="glow-bg glow-cyan"></div>
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-2xl">
+
+            <!-- Header -->
+            <div class="text-center mb-8 fade-in">
+                <span class="material-symbols-outlined text-6xl text-tertiary mb-2" style="filter: drop-shadow(0 0 20px rgba(255, 224, 74, 0.4));">emoji_events</span>
+                <h1 class="font-headline font-black text-4xl md:text-5xl text-primary glow-pink mb-2">GANADORES</h1>
+                <p class="font-label text-on-surface-variant uppercase tracking-widest text-sm">MCB QUIZ - PhotoQuiz</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-6 md:p-8 relative overflow-hidden fade-in">
+                <!-- Top accent line -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+
+                <!-- Podium -->
+                <div class="podium" id="podium">
+                    <!-- 2nd Place -->
+                    <div class="podium-place">
+                        <div class="podium-avatar silver">🥈</div>
+                        <div class="podium-name" id="secondName">--</div>
+                        <div class="podium-score" id="secondScore">-- pts</div>
+                        <div class="podium-block silver">
+                            <span class="podium-rank silver">2°</span>
+                        </div>
+                    </div>
+
+                    <!-- 1st Place -->
+                    <div class="podium-place">
+                        <div class="podium-avatar gold">👑</div>
+                        <div class="podium-name" id="firstName">--</div>
+                        <div class="podium-score" id="firstScore">-- pts</div>
+                        <div class="podium-block gold">
+                            <span class="podium-rank gold">1°</span>
+                        </div>
+                    </div>
+
+                    <!-- 3rd Place -->
+                    <div class="podium-place">
+                        <div class="podium-avatar bronze">🥉</div>
+                        <div class="podium-name" id="thirdName">--</div>
+                        <div class="podium-score" id="thirdScore">-- pts</div>
+                        <div class="podium-block bronze">
+                            <span class="podium-rank bronze">3°</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prizes Section -->
+                <div class="prizes-section">
+                    <h2 class="prizes-title">🏆 Premios</h2>
+
+                    <div class="prize-item">
+                        <span class="prize-icon">🥇</span>
+                        <div class="prize-details">
+                            <div class="prize-name">1er Lugar</div>
+                            <div class="prize-desc">[Descripción del premio principal]</div>
+                        </div>
+                    </div>
+
+                    <div class="prize-item">
+                        <span class="prize-icon">🥈</span>
+                        <div class="prize-details">
+                            <div class="prize-name">2do Lugar</div>
+                            <div class="prize-desc">[Descripción del segundo premio]</div>
+                        </div>
+                    </div>
+
+                    <div class="prize-item">
+                        <span class="prize-icon">🥉</span>
+                        <div class="prize-details">
+                            <div class="prize-name">3er Lugar</div>
+                            <div class="prize-desc">[Descripción del tercer premio]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full Rankings List -->
+                <div class="winners-list">
+                    <h2 class="font-headline font-bold text-xl text-center mb-4 text-on-surface">Clasificación Completa</h2>
+                    <div id="winnersList">
+                        <!-- Winners will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Date Info -->
+                <div class="text-center mt-6 p-4 rounded-lg bg-surface-container">
+                    <p class="font-label text-xs text-on-surface-variant uppercase tracking-widest">
+                        🗓️ Concurso finalizado el <span id="endDate" class="text-primary">--</span>
+                    </p>
+                    <p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mt-1">
+                        👥 Total de participantes: <span id="totalPlayers" class="text-secondary">--</span>
+                    </p>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-6 flex flex-col gap-3">
+                    <a href="/index.html" class="btn btn-secondary">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Volver al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        // Set the end date of the contest
+        const CONTEST_END_DATE = '2026-04-22';
+
+        // Sample winners data - Replace this with your actual data source
+        const WINNERS_DATA = [
+            { rank: 1, name: "[Ganador 1]", id: "00001", score: 1000, time: "45s", date: "2026-04-22" },
+            { rank: 2, name: "[Ganador 2]", id: "00002", score: 950, time: "52s", date: "2026-04-22" },
+            { rank: 3, name: "[Ganador 3]", id: "00003", score: 900, time: "48s", date: "2026-04-22" },
+            { rank: 4, name: "[Participante 4]", id: "00004", score: 850, time: "55s", date: "2026-04-22" },
+            { rank: 5, name: "[Participante 5]", id: "00005", score: 800, time: "60s", date: "2026-04-22" },
+            { rank: 6, name: "[Participante 6]", id: "00006", score: 750, time: "58s", date: "2026-04-22" },
+            { rank: 7, name: "[Participante 7]", id: "00007", score: 700, time: "65s", date: "2026-04-22" },
+            { rank: 8, name: "[Participante 8]", id: "00008", score: 650, time: "62s", date: "2026-04-22" },
+            { rank: 9, name: "[Participante 9]", id: "00009", score: 600, time: "70s", date: "2026-04-22" },
+            { rank: 10, name: "[Participante 10]", id: "00010", score: 550, time: "68s", date: "2026-04-22" },
+        ];
+
+        // ===== FUNCTIONS =====
+
+        function loadWinners() {
+            // Update podium
+            const top3 = WINNERS_DATA.slice(0, 3);
+
+            if (top3[0]) {
+                document.getElementById('firstName').textContent = top3[0].name;
+                document.getElementById('firstScore').textContent = top3[0].score + ' pts';
+            }
+            if (top3[1]) {
+                document.getElementById('secondName').textContent = top3[1].name;
+                document.getElementById('secondScore').textContent = top3[1].score + ' pts';
+            }
+            if (top3[2]) {
+                document.getElementById('thirdName').textContent = top3[2].name;
+                document.getElementById('thirdScore').textContent = top3[2].score + ' pts';
+            }
+
+            // Update full list
+            const listContainer = document.getElementById('winnersList');
+            listContainer.innerHTML = '';
+
+            WINNERS_DATA.forEach((winner, index) => {
+                const item = document.createElement('div');
+                item.className = 'winner-item fade-in';
+                item.style.animationDelay = (index * 0.1) + 's';
+
+                const rankClass = winner.rank <= 3 ? 'top' : '';
+                const rankIcon = winner.rank === 1 ? '👑' : winner.rank === 2 ? '🥈' : winner.rank === 3 ? '🥉' : winner.rank;
+
+                item.innerHTML = `
+                    <div class="winner-rank ${rankClass}">${rankIcon}</div>
+                    <div class="winner-info">
+                        <div class="winner-name">${winner.name}</div>
+                        <div class="winner-meta">ID: ${winner.id} • Tiempo: ${winner.time}</div>
+                    </div>
+                    <div class="winner-score">
+                        <div class="winner-score-value">${winner.score}</div>
+                        <div class="winner-score-label">puntos</div>
+                    </div>
+                `;
+
+                listContainer.appendChild(item);
+            });
+
+            // Update stats
+            document.getElementById('endDate').textContent = new Date(CONTEST_END_DATE).toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('totalPlayers').textContent = WINNERS_DATA.length;
+        }
+
+        // Confetti effect
+        function createConfetti() {
+            const colors = ['#00f3ff', '#07f3c3', '#00ff00', '#ff4444', '#a098b0'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.opacity = Math.random() * 0.5 + 0.5;
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+                document.body.appendChild(confetti);
+
+                const duration = Math.random() * 3 + 2;
+                const delay = Math.random() * 2;
+
+                confetti.animate([
+                    { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    delay: delay * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    fill: 'forwards'
+                }).onfinish = () => confetti.remove();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadWinners();
+            setTimeout(createConfetti, 500);
+        });
+    </script>
+</body>
+</html>

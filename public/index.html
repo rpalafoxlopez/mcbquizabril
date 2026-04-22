@@ -769,6 +769,7 @@
             right: -50px;
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <!-- Background glows -->
@@ -812,56 +813,7 @@
                         <input type="text" id="mcbID" placeholder="Ej: 12345" maxlength="5" autocomplete="off">
                     </div>
 
-                    <div class="input-group">
-                        <label>Departamento</label>
-                        <div class="category-grid">
-                            <button type="button" class="category-btn selected" data-category="produccion" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">precision_manufacturing</span>
-                                Producción
-                            </button>
-                            <button type="button" class="category-btn" data-category="sac" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">headset_mic</span>
-                                SAC
-                            </button>
-                            <button type="button" class="category-btn" data-category="talentoycultura" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">diversity_3</span>
-                                Talento y Cultura
-                            </button>
-                            <button type="button" class="category-btn" data-category="direccion_general" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">corporate_fare</span>
-                                Dirección General
-                            </button>
-                            <button type="button" class="category-btn" data-category="siniestros" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">car_crash</span>
-                               Siniestros
-                            </button>
-                             <button type="button" class="category-btn" data-category="finanzas" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">account_balance_wallet</span>
-                                Finanzas
-                            </button>
-                            <button type="button" class="category-btn" data-category="marketing" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">campaign</span>
-                                Marketing
-                            </button>
-                            <button type="button" class="category-btn" data-category="patrimonial" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">home_work</span>
-                                Patrimonial
-                            </button>
-                            <button type="button" class="category-btn" data-category="nuevosnegocios" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">trending_up</span>
-                                Nuevos Negocios
-                            </button>
-                            <button type="button" class="category-btn" data-category="telemarketing" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">support_agent</span>
-                               Telemarketing
-                            </button>
-                                <button type="button" class="category-btn" data-category="desarrollodigital" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">code</span>
-                               Desarrollo Digital
-                            </button>                            
-                        </div>
-                        <input type="hidden" id="categorySelect" value="produccion">
-                    </div>
+                    <input type="hidden" id="categorySelect" value="general">
 
                     <button class="btn" id="startBtn" onclick="startGame()">
                         <span class="material-symbols-outlined">rocket_launch</span>
@@ -871,7 +823,11 @@
 
                 <div class="mt-6 text-center">
                     <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">💡 15 segundos por pregunta</p>
-                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">🏆 Tabla de Clasificación </p>
+                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">
+                        <a href="./ranking-ganadores.html" target="_blank">
+                            Tabla de Clasificación
+                        </a>
+                    </p>
                     <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">🎯 Solo <b style="color:#00f3ff">una participación</b> por persona</p>
                 </div>
             </div>
@@ -943,6 +899,10 @@
                     <span class="material-symbols-outlined">home</span>
                     Inicio
                 </button>
+                <a href="/ranking-ganadores.html" class="btn" style="text-decoration: none; flex: 1;">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    Ganadores
+                </a>
             </div>
         </div>
     </div>
@@ -955,11 +915,15 @@
                 <h2 class="font-headline font-black text-3xl text-error mb-4">JUEGO FINALIZADO</h2>
                 <p class="text-on-surface-variant mb-6">El periodo de participación ha terminado.</p>
                 <p class="text-on-surface-variant text-sm">Gracias a todos por participar. ¡Los ganadores serán anunciados pronto!</p>
-                <div class="mt-6">
+                <div class="mt-6 flex flex-col gap-3">
                     <button class="btn btn-secondary" onclick="viewLeaderboardOnly()">
                         <span class="material-symbols-outlined">leaderboard</span>
                         Ver Rankings
                     </button>
+                    <a href="/ranking-ganadores.html" class="btn" style="text-decoration: none;">
+                        <span class="material-symbols-outlined">emoji_events</span>
+                        Ranking de Ganadores
+                    </a>
                 </div>
             </div>
         </div>

@@ -452,7 +452,7 @@ async function endGame() {
         
         if (result.success) {
             dbStatus.className = 'db-status success';
-            dbStatus.innerHTML = `✅ Guardado en Atlas<br><small>ID: ${result.data.id}</small>`;
+            dbStatus.innerHTML = `✅ Ya estas participando en el ranking de <span class="neon-glow-cyan">MCB, Adivina ¿Quién es?.</span>`;
         } else {
             throw new Error(result.message);
         }

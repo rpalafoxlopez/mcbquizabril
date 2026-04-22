@@ -50,38 +50,95 @@ function getPlayedScore() {
 }
 
 // ==================== BASE DE DATOS DE PREGUNTAS ====================
-const questionDatabase = {
-    landmarks: [
-        { image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800", correct: "Taj Mahal", options: ["Taj Mahal", "Palacio de Buckingham", "Machu Picchu", "Coliseo Romano"] },
-        { image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800", correct: "Torre Eiffel", options: ["Torre Eiffel", "Torre de Pisa", "Big Ben", "Torre CN"] },
-        { image: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800", correct: "Coliseo Romano", options: ["Partenón", "Coliseo Romano", "Panteón", "Circo Máximo"] },
-        { image: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800", correct: "Gran Muralla China", options: ["Muralla de Berlín", "Gran Muralla China", "Muralla de Ávila", "Murallas de Dubrovnik"] },
-        { image: "https://images.unsplash.com/photo-1565881606991-789a8d57993f?w=800", correct: "Machu Picchu", options: ["Chichén Itzá", "Tikal", "Machu Picchu", "Ciudad Perdida"] },
-        { image: "https://images.unsplash.com/photo-1533929736562-6a4c4f30e49c?w=800", correct: "Estatua de la Libertad", options: ["Estatua de la Libertad", "Cristo Redentor", "El David", "El Pensador"] },
-        { image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=800", correct: "Ópera de Sydney", options: ["Ópera de Sydney", "Teatro Real", "Metropolitan Opera", "La Scala"] },
-        { image: "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=800", correct: "Pirámides de Giza", options: ["Pirámides de Giza", "Pirámides de Teotihuacán", "Pirámides de Meroe", "Nimrud"] }
-    ],
-    animals: [
-        { image: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800", correct: "León", options: ["Tigre", "León", "Leopardo", "Guepardo"] },
-        { image: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800", correct: "Panda", options: ["Oso Polar", "Panda", "Oso Pardo", "Oso Negro"] },
-        { image: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=800", correct: "Elefante", options: ["Rinoceronte", "Hipopótamo", "Elefante", "Mamut"] },
-        { image: "https://images.unsplash.com/photo-1474511320723-9a56873571b7?w=800", correct: "Zorro", options: ["Lobo", "Zorro", "Coyote", "Chacal"] },
-        { image: "https://images.unsplash.com/photo-1552728089-57bdde30beb8?w=800", correct: "Flamenco", options: ["Cigüeña", "Grulla", "Flamenco", "Pelícano"] },
-        { image: "https://images.unsplash.com/photo-1551986782-d0169b3f8fa7?w=800", correct: "Tucán", options: ["Loro", "Tucán", "Guacamaya", "Cacatúa"] },
-        { image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=800", correct: "Delfín", options: ["Ballena", "Delfín", "Orca", "Foca"] },
-        { image: "https://images.unsplash.com/photo-1456926631375-92c8ce872def?w=800", correct: "Leopardo", options: ["Jaguar", "Leopardo", "Guepardo", "Puma"] }
-    ],
-    movies: [
-        { image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800", correct: "Harry Potter", options: ["Harry Potter", "Ron Weasley", "Hermione", "Dumbledore"] },
-        { image: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800", correct: "Iron Man", options: ["Iron Man", "Batman", "Superman", "Capitán América"] },
-        { image: "https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=800", correct: "Spider-Man", options: ["Spider-Man", "Ant-Man", "Deadpool", "Venom"] },
-        { image: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=800", correct: "Batman", options: ["Daredevil", "Batman", "Moon Knight", "Punisher"] },
-        { image: "https://images.unsplash.com/photo-1535905557558-afc4877a26fc?w=800", correct: "Groot", options: ["Groot", "Rocket", "Hulk", "Drax"] },
-        { image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=800", correct: "Spider-Man (Miles)", options: ["Spider-Man", "Miles Morales", "Spider-Gwen", "Silk"] },
-        { image: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=800", correct: "Capitán América", options: ["Capitán América", "Winter Soldier", "Falcon", "Red Skull"] },
-        { image: "https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?w=800", correct: "Hulk", options: ["Hulk", "Thing", "Abominación", "Juggernaut"] }
-    ]
-};
+const questionDatabase = {};
+
+let questionsLoaded = false;
+let loadingQuestions = false;
+
+function normalizeCategory(value) {
+    const category = String(value || '')
+        .toLowerCase()
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '_');
+
+    if (!category) return 'mixed';
+    if (['landmarks', 'lugares', 'monumentos'].includes(category)) return 'landmarks';
+    if (['animals', 'animales'].includes(category)) return 'animals';
+    if (['movies', 'peliculas', 'cine'].includes(category)) return 'movies';
+    return category;
+}
+
+function getAllQuestions() {
+    return Object.values(questionDatabase).flat();
+}
+
+function normalizeQuestion(rawQuestion) {
+    const image = rawQuestion.image || rawQuestion.imageUrl || rawQuestion.url || '';
+    const correct = rawQuestion.correct || rawQuestion.correctAnswer || rawQuestion.answer || '';
+    const optionsSource = Array.isArray(rawQuestion.options)
+        ? rawQuestion.options
+        : (Array.isArray(rawQuestion.optionList) ? rawQuestion.optionList : []);
+    const options = optionsSource
+        .map(opt => String(opt || '').trim())
+        .filter(Boolean);
+
+    if (correct && !options.includes(correct)) {
+        options.push(correct);
+    }
+
+    if (!image || !correct || options.length < 2) {
+        return null;
+    }
+
+    return {
+        image,
+        correct,
+        options,
+        category: normalizeCategory(rawQuestion.category || rawQuestion.categoria)
+    };
+}
+
+async function loadQuestionsFromDatabase() {
+    if (questionsLoaded || loadingQuestions) return;
+    loadingQuestions = true;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/questionsquiz`);
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+            throw new Error(result.message || 'No se pudieron cargar las preguntas');
+        }
+
+        Object.keys(questionDatabase).forEach(category => {
+            questionDatabase[category] = [];
+        });
+
+        result.data.forEach(raw => {
+            const question = normalizeQuestion(raw);
+            if (!question) return;
+
+            const category = question.category || 'mixed';
+            if (!questionDatabase[category]) {
+                questionDatabase[category] = [];
+            }
+            questionDatabase[category].push(question);
+        });
+        const totalQuestions = getAllQuestions().length;
+        if (totalQuestions === 0) {
+            throw new Error('La colección questionsquiz no tiene preguntas válidas');
+        }
+
+        questionsLoaded = true;
+    } catch (error) {
+        alert(`❌ Error cargando preguntas: ${error.message}`);
+        throw error;
+    } finally {
+        loadingQuestions = false;
+    }
+}
 
 // ==================== VARIABLES DEL JUEGO ====================
 let currentQuestions = [];
@@ -160,6 +217,11 @@ function initStartScreen() {
     // Iniciar countdown
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+    loadQuestionsFromDatabase().catch(() => {
+        const startBtn = document.getElementById('startBtn');
+        if (startBtn) startBtn.disabled = true;
+    });
 }
 
 function showExpiredScreen() {
@@ -175,7 +237,7 @@ function viewLeaderboardOnly() {
 }
 
 // ==================== INICIO DEL JUEGO ====================
-function startGame() {
+async function startGame() {
     // Verificar fecha límite
     if (isGameExpired()) {
         alert('⏰ El periodo de participación ha terminado.');
@@ -190,7 +252,8 @@ function startGame() {
     }
     
     playerName = document.getElementById('playerName').value.trim();
-    const category = 'mixto';
+    const categoryValue = document.getElementById('categorySelect').value;
+    const category = normalizeCategory(categoryValue);
     
     if (!playerName) {
         const input = document.getElementById('playerName');
@@ -203,11 +266,27 @@ function startGame() {
         return;
     }
     
+    try {
+        await loadQuestionsFromDatabase();
+    } catch (error) {
+        return;
+    }
+    const allQuestions = getAllQuestions();
+
     if (category === 'mixed') {
-        const allQuestions = [...questionDatabase.landmarks, ...questionDatabase.animals, ...questionDatabase.movies];
         currentQuestions = shuffleArray(allQuestions).slice(0, 10);
     } else {
-        currentQuestions = shuffleArray([...questionDatabase[category]]).slice(0, 10);
+        const categoryQuestions = questionDatabase[category] || [];
+        if (categoryQuestions.length === 0) {
+            currentQuestions = shuffleArray(allQuestions).slice(0, 10);
+        } else {
+            currentQuestions = shuffleArray([...categoryQuestions]).slice(0, 10);
+        }
+    }
+
+    if (currentQuestions.length === 0) {
+        alert('❌ No hay preguntas disponibles para jugar.');
+        return;
     }
     
     currentQuestionIndex = 0;

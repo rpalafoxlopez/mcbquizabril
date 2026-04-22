@@ -19,9 +19,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#ff2d78",
-                        secondary: "#00ffcc",
-                        tertiary: "#ffe04a",
+                        primary: "#00f3ff",
+                        secondary: "#07f3c3",
+                        tertiary: "#00ff00",
                         background: "#0a0a12",
                         surface: "#0f0f1a",
                         "surface-container": "#141422",
@@ -96,15 +96,15 @@
 
         /* ===== MCB GLOWS ===== */
         .MCB-glow-pink {
-            text-shadow: 0 0 8px #ff2d78, 0 0 20px rgba(255, 45, 120, 0.3);
+            text-shadow: 0 0 8px #00f3ff, 0 0 20px rgba(255, 45, 120, 0.3);
         }
 
         .MCB-glow-cyan {
-            text-shadow: 0 0 8px #00ffcc, 0 0 20px rgba(0, 255, 204, 0.3);
+            text-shadow: 0 0 8px #07f3c3, 0 0 20px rgba(0, 255, 204, 0.3);
         }
 
         .MCB-glow-yellow {
-            text-shadow: 0 0 8px #ffe04a, 0 0 20px rgba(255, 224, 74, 0.3);
+            text-shadow: 0 0 8px #00ff00, 0 0 20px rgba(255, 224, 74, 0.3);
         }
 
         /* ===== SCREENS ===== */
@@ -131,7 +131,7 @@
             font-family: 'Sora', sans-serif;
             font-size: 3.5rem;
             font-weight: 900;
-            color: #ff2d78;
+            color: #00f3ff;
             text-shadow: 0 0 20px rgba(255, 45, 120, 0.5);
             margin-bottom: 0.5rem;
             letter-spacing: -0.05em;
@@ -164,7 +164,7 @@
 
         .countdown-box.active {
             background: rgba(0, 255, 204, 0.1);
-            border-color: #00ffcc;
+            border-color: #07f3c3;
         }
 
         .countdown-label {
@@ -176,7 +176,7 @@
         }
 
         .countdown-box.active .countdown-label {
-            color: #00ffcc;
+            color: #07f3c3;
         }
 
         .countdown-time {
@@ -189,7 +189,7 @@
         /* Already played message */
         .played-box {
             background: rgba(255, 224, 74, 0.1);
-            border: 1px solid #ffe04a;
+            border: 1px solid #00ff00;
             border-radius: 0.75rem;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
@@ -197,7 +197,7 @@
 
         .played-box h3 {
             font-family: 'Sora', sans-serif;
-            color: #ffe04a;
+            color: #00ff00;
             margin-bottom: 0.5rem;
         }
 
@@ -218,7 +218,7 @@
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             font-size: 0.75rem;
-            color: #00ffcc;
+            color: #07f3c3;
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
@@ -239,7 +239,7 @@
 
         .input-group input:focus,
         .input-group select:focus {
-            border-color: #ff2d78;
+            border-color: #00f3ff;
             box-shadow: 0 0 15px rgba(255, 45, 120, 0.2);
         }
 
@@ -274,13 +274,13 @@
 
         .category-btn:hover {
             border-color: rgba(0, 255, 204, 0.3);
-            color: #00ffcc;
+            color: #07f3c3;
         }
 
         .category-btn.selected {
             background: rgba(255, 45, 120, 0.15);
-            border-color: #ff2d78;
-            color: #ff2d78;
+            border-color: #00f3ff;
+            color: #00f3ff;
             box-shadow: 0 0 15px rgba(255, 45, 120, 0.15);
         }
 
@@ -292,7 +292,7 @@
             gap: 0.5rem;
             width: 100%;
             padding: 1.25rem 2rem;
-            background: #ff2d78;
+            background: #00f3ff;
             color: #1a0010;
             border: none;
             border-radius: 0.75rem;
@@ -343,8 +343,8 @@
 
         .btn-secondary {
             background: transparent;
-            border: 1px solid #00ffcc;
-            color: #00ffcc;
+            border: 1px solid #07f3c3;
+            color: #07f3c3;
         }
 
         .btn-secondary:hover {
@@ -369,7 +369,7 @@
         .player-info {
             font-family: 'Sora', sans-serif;
             font-weight: 700;
-            color: #00ffcc;
+            color: #07f3c3;
             text-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
         }
 
@@ -377,7 +377,7 @@
             font-family: 'Sora', sans-serif;
             font-weight: 800;
             font-size: 1.25rem;
-            color: #ff2d78;
+            color: #00f3ff;
         }
 
         /* Timer */
@@ -397,14 +397,14 @@
 
         .timer-bar {
             height: 100%;
-            background: linear-gradient(90deg, #ff2d78, #00ffcc);
+            background: linear-gradient(90deg, #00f3ff, #07f3c3);
             box-shadow: 0 0 10px rgba(255, 45, 120, 0.5);
             transition: width 0.1s linear;
             border-radius: 3px;
         }
 
         .timer-bar.warning {
-            background: linear-gradient(90deg, #ff4444, #ff2d78);
+            background: linear-gradient(90deg, #ff4444, #00f3ff);
         }
 
         .timer-text {
@@ -430,7 +430,7 @@
         }
 
         .question-counter span {
-            color: #ffe04a;
+            color: #00ff00;
             font-weight: 700;
         }
 
@@ -507,8 +507,8 @@
 
         .option-btn.correct {
             background: rgba(0, 255, 204, 0.15);
-            border-color: #00ffcc;
-            color: #00ffcc;
+            border-color: #07f3c3;
+            color: #07f3c3;
             box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
             animation: correctPulse 0.5s;
         }
@@ -543,7 +543,7 @@
             font-family: 'Sora', sans-serif;
             font-size: 4rem;
             font-weight: 900;
-            color: #ff2d78;
+            color: #00f3ff;
             text-shadow: 0 0 20px rgba(255, 45, 120, 0.4);
             line-height: 1;
         }
@@ -551,7 +551,7 @@
         .score-message {
             font-family: 'Sora', sans-serif;
             font-size: 1.25rem;
-            color: #00ffcc;
+            color: #07f3c3;
             text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
             margin: 1rem 0 2rem;
         }
@@ -582,7 +582,7 @@
             font-family: 'Sora', sans-serif;
             font-size: 1.75rem;
             font-weight: 800;
-            color: #ff2d78;
+            color: #00f3ff;
             line-height: 1;
         }
 
@@ -608,8 +608,8 @@
         .db-status.success {
             display: block;
             background: rgba(0, 255, 204, 0.1);
-            border: 1px solid #00ffcc;
-            color: #00ffcc;
+            border: 1px solid #07f3c3;
+            color: #07f3c3;
         }
 
         .db-status.error {
@@ -622,8 +622,8 @@
         .db-status.loading {
             display: block;
             background: rgba(255, 224, 74, 0.1);
-            border: 1px solid #ffe04a;
-            color: #ffe04a;
+            border: 1px solid #00ff00;
+            color: #00ff00;
         }
 
         /* Leaderboard */
@@ -658,7 +658,7 @@
         }
 
         .leaderboard-item.current-player {
-            border-left-color: #ff2d78;
+            border-left-color: #00f3ff;
             background: linear-gradient(90deg, rgba(255, 45, 120, 0.1), transparent);
         }
 
@@ -667,7 +667,7 @@
             font-weight: 800;
             font-size: 1.1rem;
             width: 2.5rem;
-            color: #ffe04a;
+            color: #00ff00;
         }
 
         .leaderboard-info {
@@ -693,7 +693,7 @@
         .leaderboard-score-value {
             font-family: 'Sora', sans-serif;
             font-weight: 800;
-            color: #ff2d78;
+            color: #00f3ff;
         }
 
         .leaderboard-score-label {
@@ -736,11 +736,11 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0a0a12; }
         ::-webkit-scrollbar-thumb { background: #302840; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ff2d78; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f3ff; }
 
         /* ===== SELECTION ===== */
         ::selection {
-            background: #ff2d78;
+            background: #00f3ff;
             color: #1a0010;
         }
 
@@ -783,9 +783,9 @@
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
                 
                 <div class="text-center mb-8">
-                    <span class="logo-icon">⚡</span>
+                    <span class="logo-icon"> 📸 </span>
                     <div class="logo">MCB QUIZ</div>
-                    <p class="subtitle">El reto visual definitivo</p>
+                    <p class="subtitle">Adivina ¿Quién es?</p>
                 </div>
 
                 <!-- Countdown Timer -->
@@ -798,7 +798,7 @@
                 <div id="playedBox" class="played-box" style="display: none;">
                     <h3>🎮 Ya participaste</h3>
                     <p>Ya has jugado una vez. Solo se permite una participación por persona.</p>
-                    <p id="playedScore" style="margin-top: 0.5rem; color: #ff2d78; font-weight: bold;"></p>
+                    <p id="playedScore" style="margin-top: 0.5rem; color: #00f3ff; font-weight: bold;"></p>
                 </div>
 
                 <div id="gameForm">
@@ -816,51 +816,51 @@
                         <label>Departamento</label>
                         <div class="category-grid">
                             <button type="button" class="category-btn selected" data-category="produccion" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">auto_awesome</span>
+                                <span class="material-symbols-outlined">precision_manufacturing</span>
                                 Producción
                             </button>
                             <button type="button" class="category-btn" data-category="sac" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">location_on</span>
+                                <span class="material-symbols-outlined">headset_mic</span>
                                 SAC
                             </button>
                             <button type="button" class="category-btn" data-category="talentoycultura" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">pets</span>
+                                <span class="material-symbols-outlined">diversity_3</span>
                                 Talento y Cultura
                             </button>
                             <button type="button" class="category-btn" data-category="direccion_general" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">movie</span>
+                                <span class="material-symbols-outlined">corporate_fare</span>
                                 Dirección General
                             </button>
                             <button type="button" class="category-btn" data-category="siniestros" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">movie</span>
+                                <span class="material-symbols-outlined">car_crash</span>
                                Siniestros
                             </button>
-                             <button type="button" class="category-btn selected" data-category="finanzas" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">auto_awesome</span>
+                             <button type="button" class="category-btn" data-category="finanzas" onclick="selectCategory(this)">
+                                <span class="material-symbols-outlined">account_balance_wallet</span>
                                 Finanzas
                             </button>
                             <button type="button" class="category-btn" data-category="marketing" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">location_on</span>
+                                <span class="material-symbols-outlined">campaign</span>
                                 Marketing
                             </button>
                             <button type="button" class="category-btn" data-category="patrimonial" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">pets</span>
+                                <span class="material-symbols-outlined">home_work</span>
                                 Patrimonial
                             </button>
                             <button type="button" class="category-btn" data-category="nuevosnegocios" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">movie</span>
+                                <span class="material-symbols-outlined">trending_up</span>
                                 Nuevos Negocios
                             </button>
                             <button type="button" class="category-btn" data-category="telemarketing" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">movie</span>
+                                <span class="material-symbols-outlined">support_agent</span>
                                Telemarketing
                             </button>
                                 <button type="button" class="category-btn" data-category="desarrollodigital" onclick="selectCategory(this)">
-                                <span class="material-symbols-outlined">movie</span>
+                                <span class="material-symbols-outlined">code</span>
                                Desarrollo Digital
                             </button>                            
                         </div>
-                        <input type="hidden" id="categorySelect" value="mixed">
+                        <input type="hidden" id="categorySelect" value="produccion">
                     </div>
 
                     <button class="btn" id="startBtn" onclick="startGame()">
@@ -871,8 +871,8 @@
 
                 <div class="mt-6 text-center">
                     <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">💡 15 segundos por pregunta</p>
-                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">🏆 Rankings globales en MongoDB</p>
-                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">🎯 Solo una participación por persona</p>
+                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">🏆 Tabla de Clasificación </p>
+                    <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">🎯 Solo <b style="color:#00f3ff">una participación</b> por persona</p>
                 </div>
             </div>
         </div>

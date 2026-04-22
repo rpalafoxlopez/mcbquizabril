@@ -58,6 +58,25 @@ mongoose.connection.on('error', (err) => {
   console.error('❌ Error en conexión MongoDB:', err);
 });
 
+// OBTENER PREGUNTAS DESDE questionsquiz
+app.get('/api/questionsquiz', async (req, res) => {
+  try {
+    const questions = await QuestionQuiz.find().lean();
+
+    res.json({
+      success: true,
+      count: questions.length,
+      data: questions
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener questionsquiz:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno al cargar preguntas'
+    });
+  }
+});
+
 mongoose.connection.on('disconnected', () => {
   console.warn('⚠️ MongoDB desconectado');
 });
@@ -114,6 +133,22 @@ quizScoreSchema.index({ score: -1 });
 quizScoreSchema.index({ date: -1 });
 
 const QuizScore = mongoose.model('QuizScore', quizScoreSchema);
+
+const questionQuizSchema = new mongoose.Schema({
+  category: { type: String, default: 'mixed' },
+  image: { type: String },
+  imageUrl: { type: String },
+  correct: { type: String },
+  correctAnswer: { type: String },
+  answer: { type: String },
+  options: [{ type: String }],
+  optionList: [{ type: String }]
+}, {
+  collection: 'questionsquiz',
+  strict: false
+});
+
+const QuestionQuiz = mongoose.model('QuestionQuiz', questionQuizSchema);
 
 console.log('📋 Modelo configurado para colección: quizninos');
 

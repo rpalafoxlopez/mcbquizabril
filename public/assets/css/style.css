@@ -3,7 +3,14 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+
         }
+        
+         .primary{ color: #ff2d78}
+        .secondary{ color: #00ffcc}
+        .tertiary{ color:#ffe04a}
+        .background{ color:#0a0a12}
+        .surface{ color: #0f0f1a }
 
         body {
             font-family: 'Inter', sans-serif;

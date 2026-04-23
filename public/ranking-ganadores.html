@@ -657,7 +657,7 @@
 
                 <!-- Back Button -->
                 <div class="mt-6 flex flex-col gap-3">
-                    <a href="/index.html" class="btn btn-secondary">
+                    <a href="/index.html" class="btn btn-secondary" target="_self">
                         <span class="material-symbols-outlined">arrow_back</span>
                         Volver al Inicio
                     </a>
@@ -665,11 +665,14 @@
             </div>
         </div>
     </div>
-    <audio autoplay loop>
+    <audio autoplay loop id="myVideo">
         <source src="./assets/music/heroes.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio> 
     <script>
+        let vid = document.getElementById("myVideo");
+        vid.volume = 0.5;
+
         // ==================== PROTECCIÓN ANTI-CLIC DERECHO ====================
         document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
         document.addEventListener('keydown', e => {

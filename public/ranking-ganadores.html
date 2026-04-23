@@ -665,11 +665,20 @@
             </div>
         </div>
     </div>
-    <audio controls autoplay loop class="hidden">
+    <audio autoplay loop>
         <source src="./assets/music/heroes.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio> 
     <script>
+        // ==================== PROTECCIÓN ANTI-CLIC DERECHO ====================
+        document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || 
+                (e.ctrlKey && ['u','s'].includes(e.key))) {
+                e.preventDefault(); return false;
+            }
+        });
+        document.addEventListener('dragstart', e => e.preventDefault());
        // ===== CONFIGURATION =====
         const API_BASE_URL = 'https://mcbquizabril.onrender.com'; //window.location.origin;
         const CONTEST_END_DATE = '2026-04-29';

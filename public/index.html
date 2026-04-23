@@ -769,7 +769,7 @@
             right: -50px;
         }
     </style>
-<base target="_blank">
+<base target="_self">
 </head>
 <body>
     <!-- Background glows -->
@@ -826,8 +826,8 @@
                 <div class="mt-6 text-center">
                     <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">💡 15 segundos por pregunta</p>
                     <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-2">
-                        <a href="./ranking-ganadores.html" target="_blank">
-                            Tabla de Clasificación
+                        <a href="./ranking-ganadores.html" target="_self">
+                           🏆 Tabla de Clasificación
                         </a>
                     </p>
                     <p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">🎯 Solo <b style="color:#00f3ff">una participación</b> por persona</p>
@@ -918,11 +918,7 @@
                 <p class="text-on-surface-variant mb-6">El periodo de participación ha terminado.</p>
                 <p class="text-on-surface-variant text-sm">Gracias a todos por participar. ¡Los ganadores serán anunciados pronto!</p>
                 <div class="mt-6 flex flex-col gap-3">
-                    <button class="btn btn-secondary" onclick="viewLeaderboardOnly()">
-                        <span class="material-symbols-outlined">leaderboard</span>
-                        Ver Rankings
-                    </button>
-                    <a href="/ranking-ganadores.html" class="btn" style="text-decoration: none;">
+                    <a href="/ranking-ganadores.html" class="btn" target="_self" style="text-decoration: none;">
                         <span class="material-symbols-outlined">emoji_events</span>
                         Ranking de Ganadores
                     </a>

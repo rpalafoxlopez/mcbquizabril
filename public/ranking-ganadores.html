@@ -727,7 +727,7 @@
                 showContent();
 
                 // Trigger confetti after content loads
-                setTimeout(createConfetti, 500);
+                setTimeout(createConfetti, 5000);
 
             } catch (error) {
                 console.error('Error loading winners:', error);
@@ -841,7 +841,7 @@
 
         // ===== CONFETTI EFFECT =====
         function createConfetti() {
-            const colors = ['#00f3ff', '#07f3c3', '#00ff00', '#ff4444', '#a098b0', '#ff8c42'];
+            const colors = ['#00f3ff', '#07f3c3', '#00ff00', '#ff4444', '#a098b0', '#ff8c42','#ffd700', '#ff69b4', '#9b59b6', '#1abc9c', '#e67e22', '#2ecc71', '#e74c3c', '#f1c40f', '#3498db', '#ecf0f1'];
 
             for (let i = 0; i < 60; i++) {
                 const confetti = document.createElement('div');

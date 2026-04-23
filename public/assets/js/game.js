@@ -3,14 +3,14 @@
 const DEADLINE_DATE = new Date('2026-04-29T12:00:00-06:00'); // Hora Centro de México (UTC-6)
 
 // ==================== PROTECCIÓN ANTI-CLIC DERECHO ====================
-document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
+/*document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
 document.addEventListener('keydown', e => {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || 
         (e.ctrlKey && ['u','s'].includes(e.key))) {
         e.preventDefault(); return false;
     }
 });
-document.addEventListener('dragstart', e => e.preventDefault());
+document.addEventListener('dragstart', e => e.preventDefault());*/
 
 // ==================== CONFIGURACIÓN API ====================
 const API_BASE_URL = window.location.origin;

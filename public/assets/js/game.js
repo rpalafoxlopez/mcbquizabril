@@ -13,7 +13,7 @@ document.addEventListener('keydown', e => {
 document.addEventListener('dragstart', e => e.preventDefault());*/
 
 // ==================== CONFIGURACIÓN API ====================
-const API_BASE_URL = window.location.origin;
+const API_BASE_URL = 'https://mcbquizabril.onrender.com'; //window.location.origin;
 
 // ==================== VERIFICACIÓN DE FECHA Y PARTICIPACIÓN ====================
 

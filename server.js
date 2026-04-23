@@ -222,7 +222,7 @@ app.post('/api/scores', async (req, res) => {
 });
 
 // LEADERBOARD
-app.get('/api/scores/leaderboard', async (req, res) => {
+/*app.get('/api/scores/leaderboard', async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 10, 50);
     
@@ -243,6 +243,22 @@ app.get('/api/scores/leaderboard', async (req, res) => {
       success: false, 
       message: 'Error interno' 
     });
+  }
+});*/
+
+app.get('/api/scores/leaderboard', async (req, res) => {
+  try {
+      const limit = 10;
+      const scores = await QuizScore.find()
+          .sort({ score: -1, date: 1 })
+          .limit(limit)
+          .lean();
+
+      res.json({ success: true, count: scores.length, data: scores });
+  
+  } 
+  catch (error) {
+      res.status(500).json({ success: false, message: 'Error interno' });
   }
 });
 

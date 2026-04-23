@@ -7,13 +7,14 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// ============================================
+// 1. MIDDLEWARE (primero)
+// ============================================
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
 // ============================================
-// CONFIGURACIÓN MONGODB ATLAS
+// 2. CONFIGURACIÓN MONGODB ATLAS
 // ============================================
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -31,7 +32,7 @@ console.log(`🔗 Conectando a MongoDB Atlas...`);
 
 // Opciones recomendadas para Atlas
 const mongooseOptions = {
-  serverSelectionTimeoutMS: 10000, // 10 segundos de timeout
+  serverSelectionTimeoutMS: 10000,
   socketTimeoutMS: 45000,
   maxPoolSize: 10,
 };
@@ -58,32 +59,15 @@ mongoose.connection.on('error', (err) => {
   console.error('❌ Error en conexión MongoDB:', err);
 });
 
-// OBTENER PREGUNTAS DESDE questionsquiz
-app.get('/api/questionsquiz', async (req, res) => {
-  try {
-    const questions = await QuestionQuiz.find().lean();
-
-    res.json({
-      success: true,
-      count: questions.length,
-      data: questions
-    });
-  } catch (error) {
-    console.error('❌ Error al obtener questionsquiz:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error interno al cargar preguntas'
-    });
-  }
-});
-
 mongoose.connection.on('disconnected', () => {
   console.warn('⚠️ MongoDB desconectado');
 });
 
 // ============================================
-// SCHEMA Y MODELO - Colección quizninos
+// 3. DEFINIR MODELOS (antes de rutas)
 // ============================================
+
+// Schema y Modelo - Colección quizninos
 const quizScoreSchema = new mongoose.Schema({
   playerName: { 
     type: String, 
@@ -134,6 +118,7 @@ quizScoreSchema.index({ date: -1 });
 
 const QuizScore = mongoose.model('QuizScore', quizScoreSchema);
 
+// Schema y Modelo - Colección questionsquiz
 const questionQuizSchema = new mongoose.Schema({
   category: { type: String, default: 'mixed' },
   image: { type: String },
@@ -150,17 +135,36 @@ const questionQuizSchema = new mongoose.Schema({
 
 const QuestionQuiz = mongoose.model('QuestionQuiz', questionQuizSchema);
 
-console.log('📋 Modelo configurado para colección: quizninos');
+console.log('📋 Modelos configurados: quizninos, questionsquiz');
 
 // ============================================
-// RUTAS API
+// 4. RUTAS API (antes de static y catch-all)
 // ============================================
+
+// OBTENER PREGUNTAS DESDE questionsquiz
+app.get('/api/questionsquiz', async (req, res) => {
+  try {
+    const questions = await QuestionQuiz.find().lean();
+
+    res.json({
+      success: true,
+      count: questions.length,
+      data: questions
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener questionsquiz:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno al cargar preguntas'
+    });
+  }
+});
 
 // GUARDAR PUNTAJE
 app.post('/api/scores', async (req, res) => {
   console.log('\n📥 POST /api/scores');
   console.log('Datos recibidos:', req.body);
-  
+
   try {
     const { playerName, score, correctAnswers, totalQuestions, accuracy, time, category } = req.body;
 
@@ -204,7 +208,7 @@ app.post('/api/scores', async (req, res) => {
 
   } catch (error) {
     console.error('❌ ERROR al guardar:', error);
-    
+
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(e => e.message);
       return res.status(400).json({ 
@@ -213,7 +217,7 @@ app.post('/api/scores', async (req, res) => {
         errors: messages 
       });
     }
-    
+
     res.status(500).json({ 
       success: false, 
       message: 'Error interno: ' + error.message 
@@ -222,42 +226,18 @@ app.post('/api/scores', async (req, res) => {
 });
 
 // LEADERBOARD
-/*app.get('/api/scores/leaderboard', async (req, res) => {
-  try {
-    const limit = Math.min(parseInt(req.query.limit) || 10, 50);
-    
-    const scores = await QuizScore.find()
-      .sort({ score: -1, date: 1 })
-      .limit(limit)
-      .lean();
-
-    res.json({
-      success: true,
-      count: scores.length,
-      data: scores
-    });
-
-  } catch (error) {
-    console.error('❌ Error:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Error interno' 
-    });
-  }
-});*/
-
 app.get('/api/scores/leaderboard', async (req, res) => {
   try {
-      const limit = 10;
+      const limit = Math.min(parseInt(req.query.limit) || 10, 50);
       const scores = await QuizScore.find()
           .sort({ score: -1, date: 1 })
           .limit(limit)
           .lean();
 
       res.json({ success: true, count: scores.length, data: scores });
-  
   } 
   catch (error) {
+      console.error('❌ Error leaderboard:', error);
       res.status(500).json({ success: false, message: 'Error interno' });
   }
 });
@@ -267,7 +247,7 @@ app.get('/api/debug/collection', async (req, res) => {
   try {
     const count = await QuizScore.countDocuments();
     const sample = await QuizScore.findOne().sort({ date: -1 });
-    
+
     res.json({
       success: true,
       database: mongoose.connection.name,
@@ -293,11 +273,21 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Frontend
+// ============================================
+// 5. ARCHIVOS ESTÁTICOS (después de rutas API)
+// ============================================
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ============================================
+// 6. CATCH-ALL PARA SPA (al final)
+// ============================================
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// ============================================
+// 7. INICIAR SERVIDOR
+// ============================================
 app.listen(PORT, () => {
   console.log('\n========================================');
   console.log(`🌐 Servidor: http://localhost:${PORT}`);

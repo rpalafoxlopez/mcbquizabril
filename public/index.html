@@ -435,19 +435,31 @@
         }
 
         /* Image */
-       .image-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            background: rgba(10, 10, 18, 0.5);
+        .image-container {
+            width: 100%;
+            max-width: 600px;
+            height: 600px;              /* ← Alto de 600px */
+            border-radius: 1rem;
+            overflow: hidden;
+            margin: 0 auto 1.5rem;      /* ← Centrado horizontal */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            display: flex;              /* ← Flexbox centrado */
+            align-items: center;        /* ← Vertical center */
+            justify-content: center;    /* ← Horizontal center */
+            background: rgba(10, 10, 18, 0.8);
         }
 
         .image-container img {
-            width: auto;
-            height: 100%;
-            object-fit: cover;
+            max-width: 100%;            /* ← No excede ancho */
+            max-height: 100%;           /* ← No excede 600px */
+            width: auto;                /* ← Proporción natural */
+            height: auto;               /* ← Proporción natural */
+            object-fit: contain;        /* ← Imagen completa */
+            object-position: center;    /* ← Centrada */
             pointer-events: none;
+            display: block;
         }
 
         .image-container::after {

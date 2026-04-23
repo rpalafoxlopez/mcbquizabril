@@ -144,7 +144,7 @@ console.log('📋 Modelos configurados: quizninos, questionsquiz');
 // OBTENER PREGUNTAS DESDE questionsquiz
 app.get('/api/questionsquiz', async (req, res) => {
   try {
-    const questions = await QuestionQuiz.find().lean();
+    const questions = await QuestionQuiz.aggregate([{ $sample: { size: await QuestionQuiz.countDocuments() } }])
 
     res.json({
       success: true,

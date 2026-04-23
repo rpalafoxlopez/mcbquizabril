@@ -274,13 +274,13 @@ async function startGame() {
     const allQuestions = getAllQuestions();
 
     if (category === 'mixed') {
-        currentQuestions = shuffleArray(allQuestions).slice(0, 10);
+        currentQuestions = shuffleArray(allQuestions);
     } else {
         const categoryQuestions = questionDatabase[category] || [];
         if (categoryQuestions.length === 0) {
-            currentQuestions = shuffleArray(allQuestions).slice(0, 10);
+            currentQuestions = shuffleArray(allQuestions);
         } else {
-            currentQuestions = shuffleArray([...categoryQuestions]).slice(0, 10);
+            currentQuestions = shuffleArray([...categoryQuestions]);
         }
     }
 
@@ -424,7 +424,7 @@ async function endGame() {
     else if (accuracy >= 0.8) { title = 'ELITE'; message = '¡Rendimiento excepcional!'; }
     else if (accuracy >= 0.6) { title = 'EXPERT'; message = '¡Buen trabajo!'; }
     else if (accuracy >= 0.4) { title = 'ROOKIE'; message = 'Sigue practicando...'; }
-    else { title = 'NEWBIE'; message = '¡Inténtalo de nuevo!'; }
+    else { title = 'NEWBIE'; message = '¡NOOOOOOOOOO!, Sigue practicando...'; }
     
     document.getElementById('scoreMessage').innerHTML = `<span class="neon-glow-cyan">${title}</span><br><span style="font-size: 0.9rem; color: #a098b0;">${message}</span>`;
     

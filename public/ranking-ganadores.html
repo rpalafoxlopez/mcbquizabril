@@ -399,6 +399,51 @@
             margin-top: 0.25rem;
         }
 
+        /* ===== LOADING & ERROR STATES ===== */
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: #00f3ff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.875rem;
+            color: #a098b0;
+            margin-top: 1rem;
+        }
+
+        .error-message {
+            padding: 1.5rem;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            border-radius: 0.75rem;
+            color: #ff4444;
+            font-family: 'Sora', sans-serif;
+            text-align: center;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #a098b0;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
         /* ===== ANIMATIONS ===== */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -476,6 +521,7 @@
         }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <!-- Background glows -->
@@ -487,7 +533,7 @@
         <div class="w-full max-w-2xl">
 
             <!-- Header -->
-            <div class="text-center mb-8 fade-in">
+            <div class="items-center justify-center text-center mb-8 fade-in">
                 <span class="material-symbols-outlined text-6xl text-tertiary mb-2" style="filter: drop-shadow(0 0 20px rgba(255, 224, 74, 0.4));">emoji_events</span>
                 <h1 class="font-headline font-black text-4xl md:text-5xl text-primary glow-pink mb-2">GANADORES</h1>
                 <p class="font-label text-on-surface-variant uppercase tracking-widest text-sm">MCB QUIZ - PhotoQuiz</p>
@@ -496,6 +542,27 @@
             <div class="glass-panel rounded-2xl p-6 md:p-8 relative overflow-hidden fade-in">
                 <!-- Top accent line -->
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="flex flex-col items-center justify-center py-12">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Cargando ganadores...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="errorState" class="hidden">
+                    <div class="error-message">
+                        <span class="material-symbols-outlined text-3xl mb-2 block">error</span>
+                        <p id="errorText">Error al cargar los datos</p>
+                        <button class="btn btn-secondary mt-4" onclick="loadWinners()">
+                            <span class="material-symbols-outlined">refresh</span>
+                            Reintentar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content (hidden initially) -->
+                <div id="contentState" class="hidden">
 
                 <!-- Podium -->
                 <div class="podium" id="podium">
@@ -567,6 +634,15 @@
                     </div>
                 </div>
 
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden empty-state">
+                    <span class="material-symbols-outlined empty-state-icon">inbox</span>
+                    <h3 class="font-headline font-bold text-lg mb-2">No hay ganadores aún</h3>
+                    <p class="text-sm">El concurso aún no ha finalizado o no hay participaciones registradas.</p>
+                </div>
+
                 <!-- Date Info -->
                 <div class="text-center mt-6 p-4 rounded-lg bg-surface-container">
                     <p class="font-label text-xs text-on-surface-variant uppercase tracking-widest">
@@ -587,41 +663,84 @@
             </div>
         </div>
     </div>
-
-    <audio controls autoplay>
+    <audio autoplay>
         <source src="./assets/music/heroes.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
-      </audio>
-      
-
+    </audio> 
     <script>
         // ===== CONFIGURATION =====
-        // Set the end date of the contest
-        const CONTEST_END_DATE = '2026-04-22';
+        const API_BASE_URL = window.location.origin;
+        const CONTEST_END_DATE = '2026-04-29';
 
-        // Sample winners data - Replace this with your actual data source
-        const WINNERS_DATA = [
-            { rank: 1, name: "[Ganador 1]", id: "00001", score: 1000, time: "45s", date: "2026-04-22" },
-            { rank: 2, name: "[Ganador 2]", id: "00002", score: 950, time: "52s", date: "2026-04-22" },
-            { rank: 3, name: "[Ganador 3]", id: "00003", score: 900, time: "48s", date: "2026-04-22" },
-            { rank: 4, name: "[Participante 4]", id: "00004", score: 850, time: "55s", date: "2026-04-22" },
-            { rank: 5, name: "[Participante 5]", id: "00005", score: 800, time: "60s", date: "2026-04-22" },
-            { rank: 6, name: "[Participante 6]", id: "00006", score: 750, time: "58s", date: "2026-04-22" },
-            { rank: 7, name: "[Participante 7]", id: "00007", score: 700, time: "65s", date: "2026-04-22" },
-            { rank: 8, name: "[Participante 8]", id: "00008", score: 650, time: "62s", date: "2026-04-22" },
-            { rank: 9, name: "[Participante 9]", id: "00009", score: 600, time: "70s", date: "2026-04-22" },
-            { rank: 10, name: "[Participante 10]", id: "00010", score: 550, time: "68s", date: "2026-04-22" },
-        ];
+        // Premios configurables
+        const PRIZES = {
+            first: "Premio principal MCB - Gift Card $500 + Trofeo",
+            second: "Gift Card $300 + Medalla de Plata",
+            third: "Gift Card $100 + Medalla de Bronce"
+        };
+
+        // ===== STATE =====
+        let winnersData = [];
 
         // ===== FUNCTIONS =====
 
-        function loadWinners() {
-            // Update podium
-            const top3 = WINNERS_DATA.slice(0, 3);
+        async function loadWinners() {
+            showLoading();
+
+            try {
+                // Fetch top winners from MongoDB via API
+                const response = await fetch(`${API_BASE_URL}/api/scores/leaderboard?limit=50`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Error al cargar los datos');
+                }
+
+                const data = result.data || [];
+
+                if (data.length === 0) {
+                    showEmpty();
+                    return;
+                }
+
+                // Transform data to expected format
+                winnersData = data.map((entry, index) => ({
+                    rank: index + 1,
+                    name: entry.playerName || 'Anónimo',
+                    id: entry._id || entry.id || '---',
+                    score: entry.score || 0,
+                    time: entry.time || '0s',
+                    accuracy: entry.accuracy || 0,
+                    date: entry.date || new Date().toISOString(),
+                    correctAnswers: entry.correctAnswers || 0,
+                    totalQuestions: entry.totalQuestions || 0
+                }));
+
+                renderWinners();
+                showContent();
+
+                // Trigger confetti after content loads
+                setTimeout(createConfetti, 500);
+
+            } catch (error) {
+                console.error('Error loading winners:', error);
+                showError(error.message);
+            }
+        }
+
+        function renderWinners() {
+            // Update podium (top 3)
+            const top3 = winnersData.slice(0, 3);
 
             if (top3[0]) {
                 document.getElementById('firstName').textContent = top3[0].name;
                 document.getElementById('firstScore').textContent = top3[0].score + ' pts';
+                document.getElementById('firstAvatar').textContent = '👑';
             }
             if (top3[1]) {
                 document.getElementById('secondName').textContent = top3[1].name;
@@ -632,23 +751,36 @@
                 document.getElementById('thirdScore').textContent = top3[2].score + ' pts';
             }
 
+            // Update prizes
+            document.getElementById('prizeFirst').textContent = PRIZES.first;
+            document.getElementById('prizeSecond').textContent = PRIZES.second;
+            document.getElementById('prizeThird').textContent = PRIZES.third;
+
             // Update full list
             const listContainer = document.getElementById('winnersList');
             listContainer.innerHTML = '';
 
-            WINNERS_DATA.forEach((winner, index) => {
+            winnersData.forEach((winner, index) => {
                 const item = document.createElement('div');
                 item.className = 'winner-item fade-in';
-                item.style.animationDelay = (index * 0.1) + 's';
+                item.style.animationDelay = (index * 0.05) + 's';
 
                 const rankClass = winner.rank <= 3 ? 'top' : '';
-                const rankIcon = winner.rank === 1 ? '👑' : winner.rank === 2 ? '🥈' : winner.rank === 3 ? '🥉' : winner.rank;
+                const rankIcon = winner.rank === 1 ? '👑' : winner.rank === 2 ? '🥈' : winner.rank === 3 ? '🥉' : `#${winner.rank}`;
+
+                const date = new Date(winner.date).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
 
                 item.innerHTML = `
                     <div class="winner-rank ${rankClass}">${rankIcon}</div>
                     <div class="winner-info">
                         <div class="winner-name">${winner.name}</div>
-                        <div class="winner-meta">ID: ${winner.id} • Tiempo: ${winner.time}</div>
+                        <div class="winner-meta">
+                            ${winner.accuracy}% precisión • ${winner.correctAnswers}/${winner.totalQuestions} correctas • ${date}
+                        </div>
                     </div>
                     <div class="winner-score">
                         <div class="winner-score-value">${winner.score}</div>
@@ -665,22 +797,52 @@
                 month: 'long',
                 day: 'numeric'
             });
-            document.getElementById('totalPlayers').textContent = WINNERS_DATA.length;
+            document.getElementById('totalPlayers').textContent = winnersData.length;
         }
 
-        // Confetti effect
-        function createConfetti() {
-            const colors = ['#00f3ff', '#07f3c3', '#00ff00', '#ff4444', '#a098b0'];
+        // ===== UI STATE MANAGEMENT =====
+        function showLoading() {
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+            document.getElementById('contentState').classList.add('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+        }
 
-            for (let i = 0; i < 50; i++) {
+        function showContent() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+            document.getElementById('contentState').classList.remove('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+        }
+
+        function showError(message) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+            document.getElementById('contentState').classList.add('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('errorText').textContent = message;
+        }
+
+        function showEmpty() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+            document.getElementById('contentState').classList.add('hidden');
+            document.getElementById('emptyState').classList.remove('hidden');
+        }
+
+        // ===== CONFETTI EFFECT =====
+        function createConfetti() {
+            const colors = ['#00f3ff', '#07f3c3', '#00ff00', '#ff4444', '#a098b0', '#ff8c42'];
+
+            for (let i = 0; i < 60; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + 'vw';
                 confetti.style.top = '-10px';
-                confetti.style.width = Math.random() * 10 + 5 + 'px';
-                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.width = Math.random() * 12 + 6 + 'px';
+                confetti.style.height = Math.random() * 12 + 6 + 'px';
                 confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
                 confetti.style.opacity = Math.random() * 0.5 + 0.5;
                 confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
 
@@ -701,11 +863,11 @@
             }
         }
 
-        // Initialize
+        // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', () => {
             loadWinners();
-            setTimeout(createConfetti, 500);
         });
     </script>
 </body>
 </html>
+    

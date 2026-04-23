@@ -523,6 +523,7 @@
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <!-- Background glows -->
@@ -606,7 +607,7 @@
                         <span class="prize-icon">🥇</span>
                         <div class="prize-details">
                             <div class="prize-name">1er Lugar</div>
-                            <div class="prize-desc">[Descripción del premio principal]</div>
+                            <div class="prize-desc" id="prizeFirst">[Descripción del premio principal]</div>
                         </div>
                     </div>
 
@@ -614,7 +615,7 @@
                         <span class="prize-icon">🥈</span>
                         <div class="prize-details">
                             <div class="prize-name">2do Lugar</div>
-                            <div class="prize-desc">[Descripción del segundo premio]</div>
+                            <div class="prize-desc" id="prizeSecond">[Descripción del segundo premio]</div>
                         </div>
                     </div>
 
@@ -622,7 +623,7 @@
                         <span class="prize-icon">🥉</span>
                         <div class="prize-details">
                             <div class="prize-name">3er Lugar</div>
-                            <div class="prize-desc">[Descripción del tercer premio]</div>
+                            <div class="prize-desc" id="prizeThird">[Descripción del tercer premio]</div>
                         </div>
                     </div>
                 </div>
@@ -664,7 +665,7 @@
             </div>
         </div>
     </div>
-    <audio autoplay>
+    <audio controls autoplay loop class="hidden">
         <source src="./assets/music/heroes.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio> 
@@ -735,31 +736,38 @@
         }
 
         function renderWinners() {
+            // Función auxiliar segura para setear textContent
+            function setText(id, text) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = text;
+                else console.warn('Elemento #' + id + ' no encontrado');
+            }
+
             // Update podium (top 3)
             const top3 = winnersData.slice(0, 3);
 
             if (top3[0]) {
-                document.getElementById('firstName').textContent = top3[0].name;
-                document.getElementById('firstScore').textContent = top3[0].score + ' pts';
-                document.getElementById('firstAvatar').textContent = '👑';
+                setText('firstName', top3[0].name);
+                setText('firstScore', top3[0].score + ' pts');
+                setText('firstAvatar', '👑');
             }
             if (top3[1]) {
-                document.getElementById('secondName').textContent = top3[1].name;
-                document.getElementById('secondScore').textContent = top3[1].score + ' pts';
+                setText('secondName', top3[1].name);
+                setText('secondScore', top3[1].score + ' pts');
             }
             if (top3[2]) {
-                document.getElementById('thirdName').textContent = top3[2].name;
-                document.getElementById('thirdScore').textContent = top3[2].score + ' pts';
+                setText('thirdName', top3[2].name);
+                setText('thirdScore', top3[2].score + ' pts');
             }
 
             // Update prizes
-            document.getElementById('prizeFirst').textContent = PRIZES.first;
-            document.getElementById('prizeSecond').textContent = PRIZES.second;
-            document.getElementById('prizeThird').textContent = PRIZES.third;
+            setText('prizeFirst', PRIZES.first);
+            setText('prizeSecond', PRIZES.second);
+            setText('prizeThird', PRIZES.third);
 
             // Update full list
             const listContainer = document.getElementById('winnersList');
-            listContainer.innerHTML = '';
+            if (listContainer) listContainer.innerHTML = '';
 
             winnersData.forEach((winner, index) => {
                 const item = document.createElement('div');
@@ -789,16 +797,16 @@
                     </div>
                 `;
 
-                listContainer.appendChild(item);
+                if (listContainer) listContainer.appendChild(item);
             });
 
             // Update stats
-            document.getElementById('endDate').textContent = new Date(CONTEST_END_DATE).toLocaleDateString('es-ES', {
+            setText('endDate', new Date(CONTEST_END_DATE).toLocaleDateString('es-ES', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
-            });
-            document.getElementById('totalPlayers').textContent = winnersData.length;
+            }));
+            setText('totalPlayers', winnersData.length);
         }
 
         // ===== UI STATE MANAGEMENT =====

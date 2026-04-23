@@ -665,15 +665,40 @@
             </div>
         </div>
     </div>
-    <audio autoplay loop id="myVideo">
+    <audio loop id="bgMusic">
         <source src="./assets/music/heroes.mp3" type="audio/mpeg">
-        Tu navegador no soporta el elemento de audio.
-    </audio> 
+    </audio>
+
+    <button id="musicToggle" class="btn btn-secondary" style="position: fixed; bottom: 20px; right: 20px; z-index: 10000;">
+        <span id="musicIcon">🔇</span>
+    </button>
+
     <script>
-        let vid = document.getElementById("myVideo");
-        vid.volume = 0.4;
-        alert(vid.volume);
-        // ==================== PROTECCIÓN ANTI-CLIC DERECHO ====================
+        const music = document.getElementById('bgMusic');
+        const toggle = document.getElementById('musicToggle');
+        const icon = document.getElementById('musicIcon');
+        
+        music.volume = 0.10;  // 10% volumen base
+        
+        toggle.addEventListener('click', () => {
+            if (music.muted || music.paused) {
+                music.muted = false;
+                music.play();
+                icon.textContent = '🔊';
+                toggle.style.opacity = '1';
+            } else {
+                music.muted = true;
+                icon.textContent = '🔇';
+                toggle.style.opacity = '0.5';
+            }
+        });
+        
+        // Intentar autoplay (puede ser bloqueado por el navegador)
+        music.play().catch(() => {
+            console.log('Autoplay bloqueado, usuario debe activar manualmente');
+        });
+
+       // ==================== PROTECCIÓN ANTI-CLIC DERECHO ====================
         document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
         document.addEventListener('keydown', e => {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || 

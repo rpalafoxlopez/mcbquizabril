@@ -435,20 +435,16 @@
         }
 
         /* Image */
-        .image-container {
-            width: 100%;
-            max-width: 600px;
-            height: 320px;
-            border-radius: 1rem;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+       .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: rgba(10, 10, 18, 0.5);
         }
 
         .image-container img {
-            width: 100%;
+            width: auto;
             height: 100%;
             object-fit: cover;
             pointer-events: none;

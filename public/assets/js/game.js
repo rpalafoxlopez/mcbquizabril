@@ -35,9 +35,9 @@ function getTimeRemaining() {
     return { days, hours, minutes, seconds, total: diff };
 }
 
-/*function hasPlayed() {
+function hasPlayed() {
     return localStorage.getItem('neonquiz_played') === 'true';
-}*/
+}
 
 function markAsPlayed(score) {
     localStorage.setItem('neonquiz_played', 'true');
@@ -207,12 +207,12 @@ function initStartScreen() {
     }
     
     // Verificar si ya jugó
-    /*if (hasPlayed()) {
+    if (hasPlayed()) {
         document.getElementById('gameForm').style.display = 'none';
         document.getElementById('playedBox').style.display = 'block';
         document.getElementById('playedScore').textContent = `Tu puntaje: ${getPlayedScore()} pts`;
         document.getElementById('startBtn').disabled = true;
-    }*/
+    }
     
     // Iniciar countdown
     updateCountdown();
@@ -246,10 +246,10 @@ async function startGame() {
     }
     
     // Verificar si ya jugó
-    /*if (hasPlayed()) {
+    if (hasPlayed()) {
         alert('🎮 Ya has participado. Solo se permite una participación por persona.');
         return;
-    }*/
+    }
     
     playerName = document.getElementById('playerName').value.trim();
     const categoryValue = document.getElementById('categorySelect').value;

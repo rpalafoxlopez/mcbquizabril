@@ -442,8 +442,8 @@
         /* Image */
         .image-container {
             width: 100%;
-            max-width: 600px;
-            height: 600px;              /* ← Alto de 600px */
+            max-width: 400px;
+            height: 400px;              /* ← Alto de 600px */
             border-radius: 1rem;
             overflow: hidden;
             margin: 0 auto 1.5rem;      /* ← Centrado horizontal */
@@ -819,13 +819,28 @@
 
                 <div id="gameForm">
                     <div class="input-group">
+                        <label for="mcbID">Departamento</label>
+                        <select id="mcbID" placeholder="Seleccione su Departamento">
+                            <option value="">Seleccione su departamento</option>
+                            <option value="marketing">Marketing 
+                            <option value="finanzas">Finanzas</option>
+                            <option value="siniestros">Siniestros</option>
+                            <option value="sac">SAC</option>
+                            <option value="une">UNE</option>
+                            <option value="servicio_generales">Servicios generales</option>
+                            <option value="cobranza">Cobranza</option>
+                            <option value="patrimonial">Patrimonial</option>
+                            <option value="produccion">Producción</option>
+                            <option value="talento_cultura">Talento y Cultura</option>
+                            <option value="telemarketing">Telemarketing</option>
+                            <option value="journey">Journey</option>
+                            <option value="desarrollo_digital">Desarrollo Digital</option>
+                        </select>                        
+                    </div>
+                    
+                    <div class="input-group">
                         <label for="playerName">Tu Nombre</label>
                         <input type="text" id="playerName" placeholder="Ej: Juan Pérez" maxlength="20" autocomplete="off">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="mcbID">Id de MCB</label>
-                        <input type="text" id="mcbID" placeholder="Ej: 12345" maxlength="5" autocomplete="off">
                     </div>
 
                     <input type="hidden" id="categorySelect" value="general">

@@ -146,7 +146,7 @@ let currentQuestionIndex = 0;
 let score = 0;
 let correctCount = 0;
 let timer = null;
-let timeLeft = 15;
+let timeLeft = 10;
 let totalTime = 0;
 let playerName = "";
 let hasAnswered = false;
@@ -336,7 +336,7 @@ function showQuestion() {
 }
 
 function startTimer() {
-    timeLeft = 15;
+    timeLeft = 10;
     const bar = document.getElementById('timerBar');
     const text = document.getElementById('timerText');
     bar.style.width = '100%';
@@ -346,7 +346,7 @@ function startTimer() {
     
     timer = setInterval(() => {
         timeLeft -= 0.1;
-        const percentage = (timeLeft / 15) * 100;
+        const percentage = (timeLeft / 10) * 100;
         bar.style.width = percentage + '%';
         text.textContent = timeLeft.toFixed(1) + 's';
         
@@ -370,7 +370,7 @@ function selectAnswer(selectedOption, btnElement) {
     
     const question = currentQuestions[currentQuestionIndex];
     const isCorrect = selectedOption === question.correct;
-    const timeTaken = (15 - timeLeft).toFixed(1);
+    const timeTaken = (10 - timeLeft).toFixed(1);
     totalTime += parseFloat(timeTaken);
     
     const allBtns = document.querySelectorAll('.option-btn');
@@ -401,7 +401,7 @@ function selectAnswer(selectedOption, btnElement) {
         } else {
             endGame();
         }
-    }, 1500);
+    }, 1000);
 }
 
 // ==================== PANTALLA DE RESULTADOS ====================

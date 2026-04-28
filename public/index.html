@@ -69,8 +69,8 @@
             position: fixed;
             inset: 0;
             background: 
-                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+                linear-gradient(rgba(96, 1, 1, 0) 50%, rgba(39, 25, 25, 0.33) 50%),
+                linear-gradient(90deg, rgba(96, 1, 1, 0.06), rgba(0, 255, 0, 0.137), rgba(0, 0, 255, 0.225));
             background-size: 100% 2px, 3px 100%;
             pointer-events: none;
             z-index: 9999;
@@ -83,8 +83,8 @@
             position: fixed;
             inset: 0;
             background-image:
-                linear-gradient(rgba(255, 45, 120, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 45, 120, 0.04) 1px, transparent 1px);
+                linear-gradient(rgba(248, 75, 75, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(62, 2, 2, 0.04) 1px, transparent 1px);
             background-size: 40px 40px;
             pointer-events: none;
             z-index: -1;
@@ -168,8 +168,10 @@
         }
 
         .countdown-box.active {
-            background: rgba(0, 255, 204, 0.1);
-            border-color: #07f3c3;
+            /* background: rgba(0, 255, 204, 0.1);
+            border-color: #07f3c3; */
+            background: rgba(255,220,38,0.2);
+            border-color: #f70000;
         }
 
         .countdown-label {
@@ -181,14 +183,14 @@
         }
 
         .countdown-box.active .countdown-label {
-            color: #07f3c3;
+            color: #f3c507;
         }
 
         .countdown-time {
             font-family: 'Sora', sans-serif;
             font-size: 1.5rem;
             font-weight: 800;
-            color: #e8e0f0;
+            color: #b10404;
         }
 
         /* Already played message */
@@ -944,7 +946,11 @@
                 <span class="material-symbols-outlined text-6xl text-error mb-4">timer_off</span>
                 <h2 class="font-headline font-black text-3xl text-error mb-4">JUEGO FINALIZADO</h2>
                 <p class="text-on-surface-variant mb-6">El periodo de participación ha terminado.</p>
-                <p class="text-on-surface-variant text-sm">Gracias a todos por participar. ¡Los ganadores serán anunciados pronto!</p>
+                <p class="text-on-surface-variant text-sm">
+                    Gracias a todos por participar. 
+                    <br/>
+                    ¡Los ganadores serán <a href="https://app.slack.com/client/T07SV51HAPL/C099EHTG2M8" style="color: #00ff00;">anunciados</a> pronto!
+                </p>
                 <div class="mt-6 flex flex-col gap-3">
                     <a href="/ranking-ganadores.html" class="btn" target="_self" style="text-decoration: none;">
                         <span class="material-symbols-outlined">emoji_events</span>

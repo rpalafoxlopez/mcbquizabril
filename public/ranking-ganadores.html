@@ -752,6 +752,7 @@
                 winnersData = data.map((entry, index) => ({
                     rank: index + 1,
                     name: entry.playerName || 'Anónimo',
+                    departamento: entry.departamento || 'N/I',
                     id: entry._id || entry.id || '---',
                     score: entry.score || 0,
                     time: entry.time || '0s',

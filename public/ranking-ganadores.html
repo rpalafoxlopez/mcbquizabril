@@ -600,7 +600,7 @@
 
                 <!-- Prizes Section -->
                 <div class="prizes-section">
-                    <h2 class="prizes-title">🏆 ¿Premios?</h2>
+                    <h2 class="prizes-title">🏆 ¿Premios? 🤨</h2>
 
                     <div class="prize-item">
                         <span class="prize-icon">🥇</span>
@@ -824,7 +824,7 @@
                 item.innerHTML = `
                     <div class="winner-rank ${rankClass}">${rankIcon}</div>
                     <div class="winner-info">
-                        <div class="winner-name">${winner.name}</div>
+                        <div class="winner-name">${winner.name} - <small>${winner.departamento}</small></div>
                         <div class="winner-meta">
                             ${winner.accuracy}% precisión • ${winner.correctAnswers}/${winner.totalQuestions} correctas • ${date}
                         </div>
